@@ -1,6 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -23,9 +24,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="w-12 h-12 bg-accent/10 rounded-sm flex items-center justify-center mb-4 group-hover:bg-accent/15 transition-colors">
         <Icon className="w-6 h-6 text-accent-foreground" />
       </div>
-      <h3 className="font-mono text-2xl font-bold text-primary mb-1">
-        {product.name}
-      </h3>
+      <h3 className="font-mono text-2xl text-primary mb-1">{product.name}</h3>
       <p className="text-sm text-accent-foreground font-semibold mb-3">
         {product.tagline}
       </p>
@@ -40,12 +39,12 @@ export function ProductCard({ product }: ProductCardProps) {
         ))}
       </ul>
 
-      <a
+      <Link
         href="#"
         className="text-accent-foreground font-semibold hover:gap-2 inline-flex items-center gap-1 transition-all"
       >
         Learn More →
-      </a>
+      </Link>
     </div>
   );
 }

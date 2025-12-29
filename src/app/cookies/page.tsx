@@ -2,15 +2,13 @@ export default function CookiesPage() {
   return (
     <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className="font-mono text-5xl font-bold text-primary mb-2">
-          Cookie Policy
-        </h1>
+        <h1 className="font-mono text-5xl text-primary mb-2">Cookie Policy</h1>
         <p className="text-muted-foreground mb-8">
           Last updated: December 27, 2024
         </p>
 
         <div className="prose prose-sm max-w-none">
-          <h2 className="font-mono text-2xl font-bold text-primary mt-8 mb-4">
+          <h2 className="font-mono text-2xl text-primary mt-8 mb-4">
             1. What are Cookies?
           </h2>
           <p className="text-muted-foreground mb-4">
@@ -19,7 +17,7 @@ export default function CookiesPage() {
             website.
           </p>
 
-          <h2 className="font-mono text-2xl font-bold text-primary mt-8 mb-4">
+          <h2 className="font-mono text-2xl text-primary mt-8 mb-4">
             2. Types of Cookies We Use
           </h2>
           <p className="text-muted-foreground mb-4">
@@ -28,7 +26,7 @@ export default function CookiesPage() {
             cookies to track your interactions across websites.
           </p>
 
-          <h2 className="font-mono text-2xl font-bold text-primary mt-8 mb-4">
+          <h2 className="font-mono text-2xl text-primary mt-8 mb-4">
             3. Your Cookie Choices
           </h2>
           <p className="text-muted-foreground mb-4">
@@ -37,7 +35,7 @@ export default function CookiesPage() {
             website.
           </p>
 
-          <h2 className="font-mono text-2xl font-bold text-primary mt-8 mb-4">
+          <h2 className="font-mono text-2xl text-primary mt-8 mb-4">
             4. Third-Party Cookies
           </h2>
           <p className="text-muted-foreground mb-4">
@@ -46,7 +44,7 @@ export default function CookiesPage() {
             third-party services.
           </p>
 
-          <h2 className="font-mono text-2xl font-bold text-primary mt-8 mb-4">
+          <h2 className="font-mono text-2xl text-primary mt-8 mb-4">
             5. Contact Us
           </h2>
           <p className="text-muted-foreground">

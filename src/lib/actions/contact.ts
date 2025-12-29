@@ -26,6 +26,7 @@ export async function submitContactForm(formData: FormData) {
       message: "Message sent successfully",
     };
   } catch (error) {
+    console.error(error);
     return {
       success: false,
       error: "Failed to send message. Please try again.",

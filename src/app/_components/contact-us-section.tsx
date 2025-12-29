@@ -52,7 +52,7 @@ export function ContactUsSection() {
       <div className="relative z-10 flex items-center justify-center gap-6 self-stretch border-border border-t border-b px-6 py-12 md:px-24 md:py-12">
         <div className="relative z-20 flex flex-col md:flex-row w-full items-center justify-center gap-6 overflow-hidden rounded-lg px-6 py-5 md:py-8">
           <div className="flex flex-col items-start justify-start gap-3 self-stretch">
-            <div className="flex flex-col justify-center self-stretch font-mono font-semibold text-3xl text-secondary-foreground leading-tight tracking-tight md:text-5xl md:leading-[56px]">
+            <div className="flex flex-col justify-center self-stretch font-mono text-3xl text-secondary-foreground leading-tight tracking-tight md:text-5xl md:leading-[56px]">
               Get in touch
             </div>
             <div className="self-stretch font-medium font-sans text-base text-muted-foreground leading-7">

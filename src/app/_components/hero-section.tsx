@@ -1,21 +1,8 @@
-"use client";
-
 import { ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Globe } from "./globe";
 
 export function HeroSection() {
-  const [particleY, setParticleY] = useState(0);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setParticleY((e.clientY / window.innerHeight) * 20);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden pt-16 bg-gradient-to-b from-secondary via-background to-background">
       <div className="absolute inset-0 opacity-3">
@@ -26,7 +13,7 @@ export function HeroSection() {
       <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="flex flex-col max-w-3xl ml-auto lg:pr-12">
-            <h1 className="font-mono text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 text-primary leading-tight">
+            <h1 className="font-mono text-5xl sm:text-6xl lg:text-7xl mb-6 text-primary leading-tight">
               AI-Powered Cybersecurity for Modern Enterprises
             </h1>
 
@@ -61,7 +48,7 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className="hidden lg:flex items-center justify-center h-96">
+          <div className="hidden lg:flex items-center justify-center h-fit my-auto">
             <Globe />
           </div>
         </div>

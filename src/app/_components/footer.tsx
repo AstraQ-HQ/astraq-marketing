@@ -11,20 +11,20 @@ export function Footer() {
               <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
                 <span className="text-primary-foreground font-bold">A</span>
               </div>
-              <span className="font-mono font-bold text-lg">AstraQ</span>
+              <span className="font-mono text-lg">AstraQ</span>
             </div>
             <p className="text-sm opacity-80 mb-4">
               AI-powered cybersecurity for modern enterprises
             </p>
             <div className="flex gap-4">
               {["LinkedIn", "Twitter", "GitHub"].map((social) => (
-                <a
+                <Link
                   key={social}
                   href="#"
                   className="hover:text-accent-foreground transition-colors text-sm"
                 >
                   {social}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -117,28 +117,28 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="#"
                   className="hover:text-accent-foreground transition-colors"
                 >
                   Case Studies
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="#"
                   className="hover:text-accent-foreground transition-colors"
                 >
                   Documentation
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="#"
                   className="hover:text-accent-foreground transition-colors"
                 >
                   Webinars
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -148,12 +148,12 @@ export function Footer() {
             <ul className="space-y-3 text-sm opacity-80">
               <li className="flex items-center gap-2">
                 <Mail size={16} />
-                <a
+                <Link
                   href="mailto:hello@astraq.io"
                   className="hover:text-accent-foreground transition-colors"
                 >
                   hello@astraq.io
-                </a>
+                </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} />

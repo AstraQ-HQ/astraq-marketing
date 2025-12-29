@@ -20,7 +20,7 @@ export function WhyAstraQ() {
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="font-mono text-4xl sm:text-5xl font-bold text-primary mb-4">
+          <h2 className="font-mono text-4xl sm:text-5xl text-primary mb-4">
             Why AstraQ?
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -45,7 +45,7 @@ export function WhyAstraQ() {
                 <div className="w-14 h-14 bg-accent/10 rounded-sm flex items-center justify-center mx-auto mb-4">
                   <Icon className="w-7 h-7 text-accent-foreground" />
                 </div>
-                <p className="font-mono text-4xl font-bold text-primary mb-2">
+                <p className="font-mono text-4xl text-primary mb-2">
                   {stat.value}
                 </p>
                 <p className="text-muted-foreground">{stat.label}</p>
@@ -81,7 +81,7 @@ export function WhyAstraQ() {
               }`}
               style={{ transitionDelay: `${(index + 3) * 150}ms` }}
             >
-              <h3 className="font-mono text-xl font-bold text-primary mb-2">
+              <h3 className="font-mono text-xl text-primary mb-2">
                 {item.title}
               </h3>
               <p className="text-muted-foreground">{item.description}</p>

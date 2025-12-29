@@ -92,7 +92,7 @@ export default function BlogPage() {
     <>
       <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-secondary via-background to-background">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="font-mono text-5xl sm:text-6xl font-bold text-primary mb-4">
+          <h1 className="font-mono text-5xl sm:text-6xl text-primary mb-4">
             Security Blog
           </h1>
           <p className="text-lg text-muted-foreground">
@@ -145,7 +145,7 @@ export default function BlogPage() {
                 <span className="text-accent-foreground font-semibold text-sm mb-2">
                   Featured
                 </span>
-                <h2 className="font-mono text-3xl font-bold text-primary mb-3">
+                <h2 className="font-mono text-3xl text-primary mb-3">
                   {featuredPost.title}
                 </h2>
                 <p className="text-muted-foreground mb-4">
@@ -183,7 +183,7 @@ export default function BlogPage() {
                   <span className="text-xs font-semibold text-accent-foreground bg-accent/10 px-3 py-1 rounded-sm inline-block mb-3">
                     {post.category}
                   </span>
-                  <h3 className="font-mono text-lg font-bold text-primary mb-2 group-hover:text-accent-foreground transition-colors">
+                  <h3 className="font-mono text-lg text-primary mb-2 group-hover:text-accent-foreground transition-colors">
                     {post.title}
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">

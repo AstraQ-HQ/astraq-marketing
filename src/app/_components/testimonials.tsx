@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const testimonials = [
   {
@@ -54,7 +55,7 @@ export function Testimonials() {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="max-w-4xl mx-auto">
-        <h2 className="font-mono text-4xl sm:text-5xl font-bold text-primary mb-16 text-center">
+        <h2 className="font-mono text-4xl sm:text-5xl text-primary mb-16 text-center">
           Trusted by Industry Leaders
         </h2>
 
@@ -94,18 +95,20 @@ export function Testimonials() {
             </div>
 
             <div className="flex gap-2">
-              <button
+              <Button
                 onClick={prev}
+                variant="outline"
                 className="p-2 hover:bg-border rounded-sm transition-colors"
               >
                 <ChevronLeft size={20} />
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={next}
+                variant="outline"
                 className="p-2 hover:bg-border rounded-sm transition-colors"
               >
                 <ChevronRight size={20} />
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -5,10 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getImageUrl(image: any): string | null {
+export function getImageUrl(image?: { url: string } | number): string | null {
   if (!image) return null;
 
-  if (typeof image === "string") return image;
+  if (typeof image === "number") return `/api/media/${image}`;
   if (image.url) return image.url;
 
   return null;

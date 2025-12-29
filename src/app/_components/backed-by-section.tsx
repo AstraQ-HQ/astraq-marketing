@@ -16,7 +16,7 @@ export function BackedBySection() {
     <div className="flex w-full flex-col items-center justify-center border-border border-b">
       <div className="flex items-center justify-center gap-6 self-stretch border-border border-b px-4 py-8 sm:px-6 sm:py-12 md:px-24 md:py-16">
         <div className="flex w-full max-w-[586px] flex-col items-center justify-start gap-3 overflow-hidden rounded-lg px-4 py-4 sm:gap-4 sm:px-6 sm:py-5">
-          <div className="flex w-full max-w-[472.55px] flex-col justify-center text-center font-mono font-semibold text-secondary-foreground text-xl leading-tight tracking-tight sm:text-2xl md:text-3xl md:leading-[60px] lg:text-5xl">
+          <div className="flex w-full max-w-[472.55px] flex-col justify-center text-center font-mono text-secondary-foreground text-xl leading-tight tracking-tight sm:text-2xl md:text-3xl md:leading-[60px] lg:text-5xl">
             Backed by
           </div>
           <div className="self-stretch text-center font-normal font-sans text-muted-foreground text-sm leading-6 sm:text-base sm:leading-7">

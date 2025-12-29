@@ -1,10 +1,10 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Route } from "next";
 
 export function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,7 +40,7 @@ export function NavBar() {
                 A
               </span>
             </div>
-            <span className="hidden sm:inline font-mono text-xl font-bold text-primary">
+            <span className="hidden sm:inline font-mono text-xl text-primary">
               AstraQ
             </span>
           </Link>
@@ -59,12 +59,13 @@ export function NavBar() {
 
           <Button className="hidden md:block">Book Demo</Button>
 
-          <button
+          <Button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            variant="outline"
             className="md:hidden p-2 text-foreground"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          </Button>
         </div>
 
         {isMobileMenuOpen && (

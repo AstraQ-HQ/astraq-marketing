@@ -18,9 +18,9 @@ export function Globe() {
       phi: 0,
       theta: 0,
       dark: 0,
-      diffuse: 1,
-      mapSamples: 16000,
-      mapBrightness: 2,
+      diffuse: 0,
+      mapSamples: 18000,
+      mapBrightness: 12,
       baseColor: [1, 1, 1],
       markerColor: [1, 1, 1],
       glowColor: [1, 1, 1],
@@ -37,14 +37,15 @@ export function Globe() {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        width: 600,
-        height: 600,
-        maxWidth: "100%",
-        aspectRatio: "1",
-      }}
-    />
+    <div className="w-full h-full flex items-center justify-center">
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: 500,
+          height: 500,
+          aspectRatio: "1",
+        }}
+      />
+    </div>
   );
 }

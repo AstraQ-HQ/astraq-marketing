@@ -16,7 +16,7 @@ export function TechStack() {
   return (
     <section ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/20">
       <div className="max-w-7xl mx-auto text-center">
-        <h2 className="font-mono text-4xl sm:text-5xl font-bold text-primary mb-4">
+        <h2 className="font-mono text-4xl sm:text-5xl text-primary mb-4">
           Powered by Advanced AI
         </h2>
         <p className="text-lg text-muted-foreground mb-16 max-w-2xl mx-auto">

@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, BookOpen, Shield, Users } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { cn } from "@/lib/utils";
 
@@ -36,28 +36,23 @@ export function FeaturedServices() {
   const { ref, isVisible } = useIntersectionObserver();
   const [activeService, setActiveService] = useState(0);
   const [progress, setProgress] = useState(0);
-  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    if (progress >= 100) {
+      setActiveService((current) => (current + 1) % services.length);
+      setProgress(0);
+    }
+  }, [progress]);
 
   useEffect(() => {
     if (!isVisible) return;
 
     const progressInterval = setInterval(() => {
-      if (!mountedRef.current) return;
-
-      setProgress((prev) => {
-        if (prev >= 100) {
-          if (mountedRef.current) {
-            setActiveService((current) => (current + 1) % services.length);
-          }
-          return 0;
-        }
-        return prev + 1.5;
-      });
+      setProgress((prev) => prev + 1.5);
     }, 100);
 
     return () => {
       clearInterval(progressInterval);
-      mountedRef.current = false;
     };
   }, [isVisible]);
 
@@ -76,7 +71,7 @@ export function FeaturedServices() {
     >
       <div className="max-w-6xl mx-auto">
         <div className="mb-12">
-          <h2 className="font-mono text-4xl sm:text-5xl font-bold text-foreground mb-4">
+          <h2 className="font-mono text-4xl sm:text-5xl text-foreground mb-4">
             Our Services
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl">
@@ -92,9 +87,10 @@ export function FeaturedServices() {
               return (
                 <button
                   key={service.name}
+                  type="button"
                   onClick={() => handleServiceClick(index)}
                   className={cn(
-                    "flex items-start gap-4 p-4 text-left transition-all duration-300 relative",
+                    "flex items-start gap-4 p-4 cursor-pointer text-left transition-all duration-300 relative",
                     isActive ? "bg-accent" : "hover:bg-muted/20",
                   )}
                 >
@@ -138,7 +134,7 @@ export function FeaturedServices() {
                 <Icon className="w-6 h-6 text-accent-foreground" />
               </div>
               <div className="flex-1">
-                <h3 className="font-mono text-3xl sm:text-4xl font-bold text-foreground">
+                <h3 className="font-mono text-3xl sm:text-4xl text-foreground">
                   {activeServiceData.name}
                 </h3>
               </div>
