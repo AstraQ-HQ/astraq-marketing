@@ -1,0 +1,8 @@
+name: "AI Threat Detection"
+tagline: "Detect threats before they happen"
+description: "Advanced machine learning algorithms analyze network behavior in real-time to identify anomalies and threats with 99.9% accuracy."
+features:
+  - "Real-time analysis"
+  - "ML-powered detection"
+  - "Zero false positives"
+icon: "BrainIcon"

@@ -1,52 +1,12 @@
 "use client";
 
-import { BrainIcon, CheckCircleIcon, ShieldIcon, ZapIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Icon } from "@/components/ui/icon";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { siteConfig } from "@/lib/constants";
+import { allFeaturedProducts } from "@/lib/content";
 import { cn } from "@/lib/utils";
-
-const products = [
-  {
-    id: 1,
-    name: "AI Threat Detection",
-    tagline: "Detect threats before they happen",
-    description:
-      "Advanced machine learning algorithms analyze network behavior in real-time to identify anomalies and threats with 99.9% accuracy.",
-    features: [
-      "Real-time analysis",
-      "ML-powered detection",
-      "Zero false positives",
-    ],
-    icon: BrainIcon,
-  },
-  {
-    id: 2,
-    name: "Security Operations Center",
-    tagline: "Unified security command center",
-    description:
-      "Centralized dashboard for monitoring all security events, incidents, and responses across your entire infrastructure.",
-    features: ["24/7 monitoring", "Incident tracking", "Automated response"],
-    icon: ShieldIcon,
-  },
-  {
-    id: 3,
-    name: "Penetration Testing",
-    tagline: "Proactive vulnerability discovery",
-    description:
-      "Professional penetration testing services to identify and remediate vulnerabilities before attackers can exploit them.",
-    features: ["Expert testing", "Detailed reports", "Remediation guidance"],
-    icon: ZapIcon,
-  },
-  {
-    id: 4,
-    name: "Compliance Management",
-    tagline: "Stay compliant effortlessly",
-    description:
-      "Automated compliance monitoring and reporting for GDPR, HIPAA, SOC 2, and other industry standards.",
-    features: ["Automated audits", "Real-time reports", "Policy management"],
-    icon: CheckCircleIcon,
-  },
-];
 
 export function FeaturedProducts() {
   const { ref, isVisible } = useIntersectionObserver();
@@ -55,7 +15,7 @@ export function FeaturedProducts() {
 
   useEffect(() => {
     if (progress >= 100) {
-      setActiveProduct((current) => (current + 1) % products.length);
+      setActiveProduct((current) => (current + 1) % allFeaturedProducts.length);
       setProgress(0);
     }
   }, [progress]);
@@ -77,8 +37,7 @@ export function FeaturedProducts() {
     setProgress(0);
   };
 
-  const activeProductData = products[activeProduct];
-  const Icon = activeProductData.icon;
+  const activeProductData = allFeaturedProducts[activeProduct];
 
   return (
     <section
@@ -88,22 +47,20 @@ export function FeaturedProducts() {
       <div className="max-w-6xl mx-auto">
         <div className="mb-12">
           <h2 className="font-mono text-4xl sm:text-5xl text-foreground mb-4">
-            Our Solutions
+            {siteConfig.pages.home.featuredProducts.title}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            Comprehensive cybersecurity solutions powered by artificial
-            intelligence
+            {siteConfig.pages.home.featuredProducts.description}
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           <div className="flex flex-col w-full lg:w-auto lg:min-w-70">
-            {products.map((product, index) => {
-              const Icon = product.icon;
+            {allFeaturedProducts.map((product, index) => {
               const isActive = activeProduct === index;
               return (
                 <button
-                  key={product.id}
+                  key={product.slug}
                   type="button"
                   onClick={() => handleProductClick(index)}
                   className={cn(
@@ -128,7 +85,11 @@ export function FeaturedProducts() {
                         : "bg-border text-muted-foreground",
                     )}
                   >
-                    <Icon className="w-5 h-5" strokeWidth={1} />
+                    <Icon
+                      name={product.icon}
+                      className="w-5 h-5"
+                      strokeWidth={1}
+                    />
                   </div>
                   <div className="flex-1">
                     <h3
@@ -159,6 +120,7 @@ export function FeaturedProducts() {
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-sm bg-accent/10 flex items-center justify-center shrink-0">
                 <Icon
+                  name={activeProductData.icon}
                   className="w-6 h-6 text-accent-foreground"
                   strokeWidth={1}
                 />
@@ -186,12 +148,12 @@ export function FeaturedProducts() {
               ))}
             </div>
 
-            <a
+            <Link
               href="/products"
               className="inline-flex items-center gap-2 text-accent-foreground font-semibold hover:gap-3 transition-all w-fit"
             >
               View all solutions →
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -3,31 +3,9 @@
 import { ChevronLeftIcon, ChevronRightIcon, QuoteIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/constants";
+import { allTestimonials } from "@/lib/content";
 import { cn } from "@/lib/utils";
-
-const testimonials = [
-  {
-    quote:
-      "AstraQ's threat detection saved us from a major breach. The response time was incredible.",
-    author: "Sarah Chen",
-    company: "TechCorp International",
-    initials: "SC",
-  },
-  {
-    quote:
-      "The best security investment we've made. Compliance is now automated and effortless.",
-    author: "Michael Rodriguez",
-    company: "Financial Systems Inc",
-    initials: "MR",
-  },
-  {
-    quote:
-      "Their AI catches what we miss. Finally, a solution we can trust completely.",
-    author: "Emily Watson",
-    company: "DataVault Security",
-    initials: "EW",
-  },
-];
 
 export function Testimonials() {
   const [current, setCurrent] = useState(0);
@@ -36,19 +14,19 @@ export function Testimonials() {
   useEffect(() => {
     if (!autoPlay) return;
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % testimonials.length);
+      setCurrent((prev) => (prev + 1) % allTestimonials.length);
     }, 5000);
     return () => clearInterval(timer);
   }, [autoPlay]);
 
   const next = () => {
-    setCurrent((prev) => (prev + 1) % testimonials.length);
+    setCurrent((prev) => (prev + 1) % allTestimonials.length);
     setAutoPlay(false);
   };
 
   const prev = () => {
     setCurrent(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
+      (prev) => (prev - 1 + allTestimonials.length) % allTestimonials.length,
     );
     setAutoPlay(false);
   };
@@ -57,7 +35,7 @@ export function Testimonials() {
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="max-w-4xl mx-auto">
         <h2 className="font-mono text-4xl sm:text-5xl text-primary mb-16 text-center">
-          Trusted by Industry Leaders
+          {siteConfig.pages.home.testimonials.title}
         </h2>
 
         <div className="relative bg-background rounded-sm p-8 md:p-12 border border-border">
@@ -67,18 +45,18 @@ export function Testimonials() {
               strokeWidth={1}
             />
             <blockquote className="text-xl md:text-2xl font-mono mb-6 text-primary leading-relaxed">
-              "{testimonials[current].quote}"
+              "{allTestimonials[current].quote}"
             </blockquote>
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-accent/10 rounded-sm flex items-center justify-center font-semibold text-accent-foreground">
-                {testimonials[current].initials}
+                {allTestimonials[current].initials}
               </div>
               <div>
                 <p className="font-semibold text-foreground">
-                  {testimonials[current].author}
+                  {allTestimonials[current].author}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {testimonials[current].company}
+                  {allTestimonials[current].company}
                 </p>
               </div>
             </div>
@@ -86,7 +64,7 @@ export function Testimonials() {
 
           <div className="flex items-center justify-between mt-8">
             <div className="flex gap-2">
-              {testimonials.map((testimonial, index) => (
+              {allTestimonials.map((testimonial, index) => (
                 <button
                   key={`${index}-${testimonial.author}`}
                   type="button"

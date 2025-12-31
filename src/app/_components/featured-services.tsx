@@ -1,41 +1,12 @@
 "use client";
 
-import {
-  AlertCircleIcon,
-  BookOpenIcon,
-  ShieldIcon,
-  UsersIcon,
-} from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Icon } from "@/components/ui/icon";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { siteConfig } from "@/lib/constants";
+import { allFeaturedServices } from "@/lib/content";
 import { cn } from "@/lib/utils";
-
-const services = [
-  {
-    icon: ShieldIcon,
-    name: "Security Consulting",
-    description:
-      "Expert advice on security strategy, architecture, and best practices tailored to your organization's unique needs and risk profile.",
-  },
-  {
-    icon: AlertCircleIcon,
-    name: "Incident Response",
-    description:
-      "Rapid response to security incidents with expert analysis, containment, and recovery guidance to minimize damage and restore operations.",
-  },
-  {
-    icon: BookOpenIcon,
-    name: "Security Training",
-    description:
-      "Comprehensive training programs to educate your team on security practices, threat awareness, and compliance requirements.",
-  },
-  {
-    icon: UsersIcon,
-    name: "Managed Security",
-    description:
-      "Outsourced security operations with 24/7 monitoring, threat intelligence, and proactive security management and support.",
-  },
-];
 
 export function FeaturedServices() {
   const { ref, isVisible } = useIntersectionObserver();
@@ -44,7 +15,7 @@ export function FeaturedServices() {
 
   useEffect(() => {
     if (progress >= 100) {
-      setActiveService((current) => (current + 1) % services.length);
+      setActiveService((current) => (current + 1) % allFeaturedServices.length);
       setProgress(0);
     }
   }, [progress]);
@@ -66,8 +37,7 @@ export function FeaturedServices() {
     setProgress(0);
   };
 
-  const activeServiceData = services[activeService];
-  const Icon = activeServiceData.icon;
+  const activeServiceData = allFeaturedServices[activeService];
 
   return (
     <section
@@ -77,17 +47,16 @@ export function FeaturedServices() {
       <div className="max-w-6xl mx-auto">
         <div className="mb-12">
           <h2 className="font-mono text-4xl sm:text-5xl text-foreground mb-4">
-            Our Services
+            {siteConfig.pages.home.featuredServices.title}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            Expert services to complement your security solutions
+            {siteConfig.pages.home.featuredServices.description}
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row-reverse gap-8 lg:gap-12">
           <div className="flex flex-col w-full lg:w-auto lg:min-w-[280px]">
-            {services.map((service, index) => {
-              const ServiceIcon = service.icon;
+            {allFeaturedServices.map((service, index) => {
               const isActive = activeService === index;
               return (
                 <button
@@ -116,7 +85,11 @@ export function FeaturedServices() {
                         : "bg-border text-muted-foreground",
                     )}
                   >
-                    <ServiceIcon className="w-5 h-5" strokeWidth={1} />
+                    <Icon
+                      name={service.icon}
+                      className="w-5 h-5"
+                      strokeWidth={1}
+                    />
                   </div>
                   <div className="flex-1">
                     <h3
@@ -137,6 +110,7 @@ export function FeaturedServices() {
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-sm bg-accent/10 flex items-center justify-center flex-shrink-0">
                 <Icon
+                  name={activeServiceData.icon}
                   className="w-6 h-6 text-accent-foreground"
                   strokeWidth={1}
                 />
@@ -152,12 +126,12 @@ export function FeaturedServices() {
               {activeServiceData.description}
             </p>
 
-            <a
+            <Link
               href="/services"
               className="inline-flex items-center gap-2 text-accent-foreground font-semibold hover:gap-3 transition-all w-fit"
             >
               View all services →
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -12,9 +12,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { submitContactForm } from "@/lib/actions/contact";
-import { type ContactFormData, contactFormSchema } from "@/lib/constants";
+import {
+  type ContactFormData,
+  contactFormSchema,
+  siteConfig,
+} from "@/lib/constants";
 
 export function ContactUsSection() {
+  const { title, subtitle } = siteConfig.pages.home.contactUs;
+
   const form = useForm({
     defaultValues: {
       name: "",
@@ -37,12 +43,10 @@ export function ContactUsSection() {
         <div className="relative z-20 flex flex-col md:flex-row w-full items-center justify-center gap-6 overflow-hidden rounded-lg px-6 py-5 md:py-8">
           <div className="flex flex-col items-start justify-start gap-3 self-stretch">
             <div className="flex flex-col justify-center self-stretch font-mono text-3xl text-secondary-foreground leading-tight tracking-tight md:text-5xl md:leading-[56px]">
-              Get in touch
+              {title}
             </div>
-            <div className="self-stretch font-medium font-sans text-base text-muted-foreground leading-7">
-              Have questions? We'd love to hear from you.
-              <br />
-              Send us a message and we'll respond as soon as possible.
+            <div className="self-stretch font-medium font-sans text-base text-muted-foreground leading-7 whitespace-pre-line">
+              {subtitle}
             </div>
           </div>
           <div className="flex w-full max-w-[497px] flex-col items-center justify-center gap-6">

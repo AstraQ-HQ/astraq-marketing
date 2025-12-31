@@ -1,30 +1,20 @@
 import Image from "next/image";
 import { Marquee } from "@/components/ui/marquee";
+import { siteConfig } from "@/lib/constants";
 import { getImageUrl } from "@/lib/utils";
 
-const backers = [
-  { id: 1, name: "TechSecure", logo: { url: "/tech-security-logo.jpg" } },
-  { id: 2, name: "CyberShield", logo: { url: "/cyber-defense-logo.jpg" } },
-  { id: 3, name: "DefenseNet", logo: { url: "/defense-network-logo.jpg" } },
-  { id: 4, name: "SecureVault", logo: { url: "/secure-vault-logo.jpg" } },
-  { id: 5, name: "ThreatGuard", logo: { url: "/threat-protection-logo.jpg" } },
-  {
-    id: 6,
-    name: "IntelSecure",
-    logo: { url: "/intelligence-security-logo.jpg" },
-  },
-];
-
 export function BackedBySection() {
+  const { title, description, backers } = siteConfig.pages.home.backedBy;
+
   return (
     <div className="flex w-full flex-col items-center justify-center border-border border-b">
       <div className="flex items-center justify-center gap-6 self-stretch border-border border-b px-4 py-8 sm:px-6 sm:py-12 md:px-24 md:py-16">
         <div className="flex w-full max-w-[586px] flex-col items-center justify-start gap-3 overflow-hidden rounded-lg px-4 py-4 sm:gap-4 sm:px-6 sm:py-5">
           <div className="flex w-full max-w-[472.55px] flex-col justify-center text-center font-mono text-secondary-foreground text-xl leading-tight tracking-tight sm:text-2xl md:text-3xl md:leading-[60px] lg:text-5xl">
-            Backed by
+            {title}
           </div>
           <div className="self-stretch text-center font-normal font-sans text-muted-foreground text-sm leading-6 sm:text-base sm:leading-7">
-            Trusted within India’s defence innovation ecosystem.
+            {description}
           </div>
         </div>
       </div>

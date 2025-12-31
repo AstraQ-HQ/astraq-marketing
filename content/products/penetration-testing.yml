@@ -1,0 +1,8 @@
+name: "Penetration Testing"
+tagline: "Proactive vulnerability discovery"
+description: "Professional penetration testing services to identify and remediate vulnerabilities before attackers can exploit them."
+features:
+  - "Expert testing"
+  - "Detailed reports"
+  - "Remediation guidance"
+icon: "ZapIcon"

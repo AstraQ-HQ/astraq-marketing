@@ -1,5 +1,6 @@
 import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
 import Link from "next/link";
+import { siteConfig } from "@/lib/constants";
 
 export function Footer() {
   return (
@@ -9,21 +10,21 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
-                <span className="text-primary-foreground font-bold">A</span>
+                <span className="text-primary-foreground font-bold">
+                  {siteConfig.name.charAt(0)}
+                </span>
               </div>
-              <span className="font-mono text-lg">AstraQ</span>
+              <span className="font-mono text-lg">{siteConfig.name}</span>
             </div>
-            <p className="text-sm opacity-80 mb-4">
-              AI-powered cybersecurity for modern enterprises
-            </p>
+            <p className="text-sm opacity-80 mb-4">{siteConfig.description}</p>
             <div className="flex gap-4">
-              {["LinkedIn", "Twitter", "GitHub"].map((social) => (
+              {siteConfig.footer.socials.map((social) => (
                 <Link
-                  key={social}
-                  href="#"
+                  key={social.label}
+                  href={social.href}
                   className="hover:text-accent-foreground transition-colors text-sm"
                 >
-                  {social}
+                  {social.label}
                 </Link>
               ))}
             </div>
@@ -32,114 +33,48 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Products</h3>
             <ul className="space-y-2 text-sm opacity-80">
-              <li>
-                <Link
-                  href="/products"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  AI Threat Detection
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Security Operations Center
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Penetration Testing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Compliance Management
-                </Link>
-              </li>
+              {siteConfig.footer.products.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    className="hover:text-accent-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
             <h3 className="font-semibold mb-4">Services</h3>
             <ul className="space-y-2 text-sm opacity-80">
-              <li>
-                <Link
-                  href="/services"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Security Consulting
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Incident Response
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Security Training
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Managed Security
-                </Link>
-              </li>
+              {siteConfig.footer.services.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    className="hover:text-accent-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Resources</h3>
-            <ul className="space-y-2 text-sm opacity-80">
-              <li>
-                <Link
-                  href="/blog"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Case Studies
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Documentation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="hover:text-accent-foreground transition-colors"
-                >
-                  Webinars
-                </Link>
-              </li>
+            <h3 className="font-semibold text-foreground mb-4">Resources</h3>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              {siteConfig.footer.resources.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    className="hover:text-accent-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -149,24 +84,24 @@ export function Footer() {
               <li className="flex items-center gap-2">
                 <MailIcon size={16} strokeWidth={1} />
                 <Link
-                  href="mailto:hello@astraq.io"
+                  href={`mailto:${siteConfig.footer.contact.email}`}
                   className="hover:text-accent-foreground transition-colors"
                 >
-                  hello@astraq.io
+                  {siteConfig.footer.contact.email}
                 </Link>
               </li>
               <li className="flex items-center gap-2">
                 <PhoneIcon size={16} strokeWidth={1} />
-                <a
-                  href="tel:+14155551234"
+                <Link
+                  href={`tel:${siteConfig.footer.contact.phone.replace(/[^0-9+]/g, "")}`}
                   className="hover:text-accent-foreground transition-colors"
                 >
-                  +1 (415) 555-1234
-                </a>
+                  {siteConfig.footer.contact.phone}
+                </Link>
               </li>
               <li className="flex items-center gap-2">
                 <MapPinIcon size={16} strokeWidth={1} />
-                <span>San Francisco, CA</span>
+                <span>{siteConfig.footer.contact.address}</span>
               </li>
             </ul>
           </div>
@@ -174,27 +109,18 @@ export function Footer() {
 
         <div className="border-t border-primary-foreground/20 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm opacity-80">
-            © 2025 AstraQ. All rights reserved.
+            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm opacity-80">
-            <Link
-              href="/privacy"
-              className="hover:text-accent-foreground transition-colors"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="/terms"
-              className="hover:text-accent-foreground transition-colors"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              href="/cookies"
-              className="hover:text-accent-foreground transition-colors"
-            >
-              Cookie Policy
-            </Link>
+            {siteConfig.footer.legal.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="hover:text-accent-foreground transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

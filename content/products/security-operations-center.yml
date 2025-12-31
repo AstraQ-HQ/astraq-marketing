@@ -1,0 +1,8 @@
+name: "Security Operations Center"
+tagline: "Unified security command center"
+description: "Centralized dashboard for monitoring all security events, incidents, and responses across your entire infrastructure."
+features:
+  - "24/7 monitoring"
+  - "Incident tracking"
+  - "Automated response"
+icon: "ShieldIcon"

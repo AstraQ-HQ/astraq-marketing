@@ -1,0 +1,8 @@
+name: "Compliance Management"
+tagline: "Stay compliant effortlessly"
+description: "Automated compliance monitoring and reporting for GDPR, HIPAA, SOC 2, and other industry standards."
+features:
+  - "Automated audits"
+  - "Real-time reports"
+  - "Policy management"
+icon: "CheckCircleIcon"

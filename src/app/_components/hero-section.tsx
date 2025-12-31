@@ -1,8 +1,11 @@
 import { ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/constants";
 import { Globe } from "./globe";
 
 export function HeroSection() {
+  const { title, description, cta, tags } = siteConfig.pages.home.hero;
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden pt-16 bg-gradient-to-b from-secondary via-background to-background">
       <div className="absolute inset-0 opacity-3">
@@ -14,37 +17,34 @@ export function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="flex flex-col max-w-3xl ml-auto lg:pr-12">
             <h1 className="font-mono text-5xl sm:text-6xl lg:text-7xl mb-6 text-primary leading-tight">
-              AI-Powered Cybersecurity for Modern Enterprises
+              {title}
             </h1>
 
             <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
-              Protect your organization with cutting-edge artificial
-              intelligence. Detect threats before they strike, respond in
-              seconds, and ensure compliance effortlessly.
+              {description}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-16">
               <Button className="px-8 py-3 text-primary-foreground rounded-sm font-semibold hover:shadow-lg transition-all hover:scale-105">
-                Explore Solutions
+                {cta.primary}
               </Button>
               <Button
                 variant="outline"
                 className="px-8 py-3 border border-primary text-primary rounded-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-all bg-transparent"
               >
-                Book Demo
+                {cta.secondary}
               </Button>
             </div>
 
             <div className="flex flex-col md:flex-row gap-4">
-              <p className="text-sm font-semibold text-foreground border-l-2 border-accent pl-3">
-                Enterprise Grade
-              </p>
-              <p className="text-sm font-semibold text-foreground border-l-2 border-accent pl-3">
-                Lightning Fast
-              </p>
-              <p className="text-sm font-semibold text-foreground border-l-2 border-accent pl-3">
-                Always Secure
-              </p>
+              {tags.map((tag) => (
+                <p
+                  key={tag}
+                  className="text-sm font-semibold text-foreground border-l-2 border-accent pl-3"
+                >
+                  {tag}
+                </p>
+              ))}
             </div>
           </div>
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { MenuIcon, XIcon } from "lucide-react";
-import type { Route } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function NavBar() {
@@ -19,14 +19,6 @@ export function NavBar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navItems: { label: string; href: Route }[] = [
-    { label: "Products", href: "/products" },
-    { label: "Services", href: "/services" },
-    { label: "Blog", href: "/blog" },
-    { label: "About", href: "#why-astraq" },
-    { label: "Contact", href: "#contact" },
-  ];
-
   return (
     <nav
       className={cn(
@@ -39,16 +31,16 @@ export function NavBar() {
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-lg">
-                A
+                {siteConfig.name.charAt(0)}
               </span>
             </div>
             <span className="hidden sm:inline font-mono text-xl text-primary">
-              AstraQ
+              {siteConfig.name}
             </span>
           </Link>
 
           <div className="hidden md:flex gap-8">
-            {navItems.map((item) => (
+            {siteConfig.header.navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
@@ -59,7 +51,7 @@ export function NavBar() {
             ))}
           </div>
 
-          <Button className="hidden md:block">Book Demo</Button>
+          <Button className="hidden md:block">{siteConfig.header.cta}</Button>
 
           <Button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -76,7 +68,7 @@ export function NavBar() {
 
         {isMobileMenuOpen && (
           <div className="md:hidden pb-4 border-t border-border">
-            {navItems.map((item) => (
+            {siteConfig.header.navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
@@ -85,7 +77,7 @@ export function NavBar() {
                 {item.label}
               </Link>
             ))}
-            <Button className="w-full mt-4">Book Demo</Button>
+            <Button className="w-full mt-4">{siteConfig.header.cta}</Button>
           </div>
         )}
       </div>

@@ -1,3 +1,13 @@
+import {
+  AwardIcon,
+  ClockIcon,
+  CloudIcon,
+  DatabaseIcon,
+  LockIcon,
+  TrendingUpIcon,
+  ZapIcon,
+} from "lucide-react";
+import type { Route } from "next";
 import { z } from "zod";
 
 export const CONTACT_EMAIL = "contact@astraqcyberdefence.com";
@@ -11,3 +21,174 @@ export const contactFormSchema = z.object({
 });
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
+
+type NavItem = {
+  label: string;
+  href: Route;
+};
+
+export const siteConfig = {
+  name: "AstraQ",
+  description: "AI-powered cybersecurity for modern enterprises",
+  header: {
+    navItems: [
+      { label: "Products", href: "/products" },
+      { label: "Services", href: "/services" },
+      { label: "Blog", href: "/blog" },
+      { label: "About", href: "/#why-astraq" },
+      { label: "Contact", href: "/#contact" },
+    ] satisfies NavItem[],
+    cta: "Book Demo",
+  },
+  pages: {
+    home: {
+      hero: {
+        title: "AI-Powered Cybersecurity for Modern Enterprises",
+        description:
+          "Protect your organization with cutting-edge artificial intelligence. Detect threats before they strike, respond in seconds, and ensure compliance effortlessly.",
+        cta: {
+          primary: "Explore Solutions",
+          secondary: "Book Demo",
+        },
+        tags: ["Enterprise Grade", "Lightning Fast", "Always Secure"],
+      },
+      backedBy: {
+        title: "Backed by",
+        description: "Trusted within India’s defence innovation ecosystem.",
+        backers: [
+          {
+            id: 1,
+            name: "TechSecure",
+            logo: { url: "/tech-security-logo.jpg" },
+          },
+          {
+            id: 2,
+            name: "CyberShield",
+            logo: { url: "/cyber-defense-logo.jpg" },
+          },
+          {
+            id: 3,
+            name: "DefenseNet",
+            logo: { url: "/defense-network-logo.jpg" },
+          },
+          {
+            id: 4,
+            name: "SecureVault",
+            logo: { url: "/secure-vault-logo.jpg" },
+          },
+          {
+            id: 5,
+            name: "ThreatGuard",
+            logo: { url: "/threat-protection-logo.jpg" },
+          },
+          {
+            id: 6,
+            name: "IntelSecure",
+            logo: { url: "/intelligence-security-logo.jpg" },
+          },
+        ],
+      },
+      whyAstraQ: {
+        title: "Why AstraQ?",
+        description:
+          "Trusted by enterprises worldwide for unmatched security and innovation",
+        stats: [
+          {
+            icon: TrendingUpIcon,
+            value: "99.9%",
+            label: "Threat Detection Rate",
+          },
+          { icon: ClockIcon, value: "<5min", label: "Response Time" },
+          { icon: AwardIcon, value: "500+", label: "Enterprise Clients" },
+        ],
+        features: [
+          {
+            title: "Innovation First",
+            description:
+              "Cutting-edge AI and machine learning technologies at the forefront of cybersecurity.",
+          },
+          {
+            title: "Enterprise Proven",
+            description:
+              "Trusted by Fortune 500 companies and government agencies for mission-critical protection.",
+          },
+          {
+            title: "Expert Support",
+            description:
+              "24/7 expert support team dedicated to your security and success.",
+          },
+        ],
+      },
+      featuredProducts: {
+        title: "Our Solutions",
+        description:
+          "Comprehensive cybersecurity solutions powered by artificial intelligence",
+      },
+      featuredServices: {
+        title: "Our Services",
+        description: "Expert services to complement your security solutions",
+      },
+      techStack: {
+        title: "Powered by Advanced AI",
+        description: "Our platform leverages state-of-the-art technologies",
+        techs: [
+          { icon: ZapIcon, name: "Advanced ML", desc: "Neural networks" },
+          {
+            icon: DatabaseIcon,
+            name: "Big Data",
+            desc: "Real-time processing",
+          },
+          {
+            icon: CloudIcon,
+            name: "Cloud Native",
+            desc: "Scalable architecture",
+          },
+          { icon: LockIcon, name: "Zero Trust", desc: "Security framework" },
+        ],
+      },
+      testimonials: {
+        title: "Trusted by Industry Leaders",
+      },
+      contactUs: {
+        title: "Get in touch",
+        subtitle:
+          "Have questions? We'd love to hear from you.\nSend us a message and we'll respond as soon as possible.",
+      },
+    },
+  },
+  footer: {
+    products: [
+      { label: "AI Threat Detection", href: "/products" },
+      { label: "Security Operations Center", href: "/products" },
+      { label: "Penetration Testing", href: "/products" },
+      { label: "Compliance Management", href: "/products" },
+    ] as NavItem[],
+    services: [
+      { label: "Security Consulting", href: "/services" },
+      { label: "Incident Response", href: "/services" },
+      { label: "Security Training", href: "/services" },
+      { label: "Managed Security", href: "/services" },
+    ] as NavItem[],
+    resources: [
+      { label: "Blog", href: "/blog" },
+      { label: "Case Studies", href: "#" },
+      { label: "Documentation", href: "#" },
+      { label: "Webinars", href: "#" },
+    ] as NavItem[],
+    legal: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "Cookie Policy", href: "/cookies" },
+    ] as NavItem[],
+    socials: [
+      { label: "LinkedIn", href: "#" },
+      { label: "Twitter", href: "#" },
+      { label: "GitHub", href: "#" },
+    ] as NavItem[],
+    contact: {
+      email: CONTACT_EMAIL,
+      phone: "+1 (415) 555-1234",
+      address: "San Francisco, CA",
+    },
+  },
+};

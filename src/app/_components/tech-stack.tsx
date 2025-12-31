@@ -1,27 +1,21 @@
 "use client";
 
-import { CloudIcon, DatabaseIcon, LockIcon, ZapIcon } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { siteConfig } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function TechStack() {
   const { ref, isVisible } = useIntersectionObserver();
-
-  const techs = [
-    { icon: ZapIcon, name: "Advanced ML", desc: "Neural networks" },
-    { icon: DatabaseIcon, name: "Big Data", desc: "Real-time processing" },
-    { icon: CloudIcon, name: "Cloud Native", desc: "Scalable architecture" },
-    { icon: LockIcon, name: "Zero Trust", desc: "Security framework" },
-  ];
+  const { title, description, techs } = siteConfig.pages.home.techStack;
 
   return (
     <section ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/20">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="font-mono text-4xl sm:text-5xl text-primary mb-4">
-          Powered by Advanced AI
+          {title}
         </h2>
         <p className="text-lg text-muted-foreground mb-16 max-w-2xl mx-auto">
-          Our platform leverages state-of-the-art technologies
+          {description}
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">

@@ -1,17 +1,13 @@
 "use client";
 
-import { AwardIcon, ClockIcon, TrendingUpIcon } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { siteConfig } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function WhyAstraQ() {
   const { ref, isVisible } = useIntersectionObserver();
-
-  const stats = [
-    { icon: TrendingUpIcon, value: "99.9%", label: "Threat Detection Rate" },
-    { icon: ClockIcon, value: "<5min", label: "Response Time" },
-    { icon: AwardIcon, value: "500+", label: "Enterprise Clients" },
-  ];
+  const { title, description, stats, features } =
+    siteConfig.pages.home.whyAstraQ;
 
   return (
     <section
@@ -22,11 +18,10 @@ export function WhyAstraQ() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="font-mono text-4xl sm:text-5xl text-primary mb-4">
-            Why AstraQ?
+            {title}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Trusted by enterprises worldwide for unmatched security and
-            innovation
+            {description}
           </p>
         </div>
 
@@ -60,23 +55,7 @@ export function WhyAstraQ() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Innovation First",
-              description:
-                "Cutting-edge AI and machine learning technologies at the forefront of cybersecurity.",
-            },
-            {
-              title: "Enterprise Proven",
-              description:
-                "Trusted by Fortune 500 companies and government agencies for mission-critical protection.",
-            },
-            {
-              title: "Expert Support",
-              description:
-                "24/7 expert support team dedicated to your security and success.",
-            },
-          ].map((item, index) => (
+          {features.map((item, index) => (
             <div
               key={item.title}
               className={cn(
