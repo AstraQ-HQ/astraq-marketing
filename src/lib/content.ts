@@ -1,3 +1,3 @@
-import { allBlogs, Blog, } from "content-collections"
+import { allBlogs, Blog } from "content-collections";
 
-export const allBlogsByDate = allBlogs
+export const allBlogsByDate = allBlogs;
