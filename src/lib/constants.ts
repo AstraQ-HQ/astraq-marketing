@@ -187,8 +187,8 @@ export const siteConfig = {
     ] as NavItem[],
     contact: {
       email: CONTACT_EMAIL,
-      phone: "+1 (415) 555-1234",
-      address: "San Francisco, CA",
+      phone: "+91 7249561082",
+      address: "Akola, Maharashtra, India",
     },
   },
 };
