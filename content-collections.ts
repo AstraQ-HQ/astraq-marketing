@@ -141,11 +141,14 @@ const blogs = defineCollection({
       },
     );
 
+    const slug = document._meta.fileName.replace(".mdx", "");
+
     return {
       ...document,
+      banner: document.banner ?? `/images/blog/${slug}.png`,
       html,
       headings: cachedHeadings,
-      slug: document._meta.fileName.replace(".mdx", ""),
+      slug,
       readingTime: time,
     };
   },

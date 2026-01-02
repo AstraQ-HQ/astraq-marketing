@@ -2,6 +2,7 @@
 
 import { formatDate } from "date-fns";
 import { CalendarIcon, SearchIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -90,8 +91,14 @@ export default function BlogPage() {
           <div className="max-w-7xl mx-auto">
             <Link href={`/blog/${featuredPost.slug}`} className="block group">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-secondary rounded-lg overflow-hidden border border-border p-8 transition-all group-hover:border-accent group-hover:shadow-lg">
-                <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg flex items-center justify-center min-h-[200px]">
-                  <div className="text-6xl">📰</div>
+                <div className="relative bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg overflow-hidden min-h-[320px]">
+                  <Image
+                    src={featuredPost.banner}
+                    alt={featuredPost.title}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
                 </div>
                 <div className="flex flex-col justify-center">
                   <span className="text-accent-foreground font-semibold text-sm mb-2">
@@ -135,8 +142,13 @@ export default function BlogPage() {
                     transition: `opacity 700ms ${index * 100}ms, transform 700ms ${index * 100}ms, box-shadow 300ms, border-color 300ms`,
                   }}
                 >
-                  <div className="w-full h-40 bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg mb-4 flex items-center justify-center">
-                    <div className="text-4xl">📝</div>
+                  <div className="relative w-full h-40 bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg mb-4 overflow-hidden">
+                    <Image
+                      src={post.banner}
+                      alt={post.title}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                   <span className="text-xs font-semibold text-accent-foreground bg-accent/10 px-3 py-1 rounded-sm inline-block mb-3">
                     {post.category}
