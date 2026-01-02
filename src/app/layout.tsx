@@ -4,7 +4,7 @@ import { Nunito_Sans, Space_Mono } from "next/font/google";
 import type React from "react";
 import { Footer } from "./_components/footer";
 import { NavBar } from "./_components/navbar";
-import "./globals.css";
+import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 
 const spaceMono = Space_Mono({

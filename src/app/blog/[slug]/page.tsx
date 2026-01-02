@@ -1,0 +1,139 @@
+import { formatDate } from "date-fns";
+import { Share2Icon } from "lucide-react";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Linkedin, XDark } from "@/components/icons";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { allBlogsByDate } from "@/lib/content";
+import { Mdx } from "./_components/mdx";
+import { BlogSidebar } from "./_components/sidebar";
+import { MobileTableOfContents } from "./_components/toc";
+import "@/styles/mdx.css";
+import "@/styles/shiki.css";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/blog/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const blog = allBlogsByDate.find((blog) => blog.slug === slug);
+
+  return {
+    title: `${blog?.title} | AstraQ Blog`,
+    description: blog?.summary,
+    keywords: blog?.category && [blog.category, "blog", "astraq", "technology"],
+  };
+}
+
+export async function generateStaticParams() {
+  return allBlogsByDate.map((blog) => ({ slug: blog.slug }));
+}
+
+export default async function Page({ params }: PageProps<"/blog/[slug]">) {
+  const { slug } = await params;
+  const blog = allBlogsByDate.find((blog) => blog.slug === slug);
+
+  if (!blog) {
+    notFound();
+  }
+
+  const path = `/blog/${blog.slug}`;
+
+  return (
+    <div className="pt-40">
+      <article className="container-custom section-spacing relative">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="order-2 lg:order-1">
+              <div className="mb-4 font-medium text-muted-foreground text-sm">
+                <Badge variant="outline">{blog.category}</Badge> •{" "}
+                {formatDate(blog.publishedAt, "MMMM do, yyyy")} •{" "}
+                {blog.readingTime}
+              </div>
+              <h1 className="mb-6 font-mono text-4xl md:text-5xl lg:text-5xl">
+                {blog.title}
+              </h1>
+              <p className="mb-6 text-muted-foreground font-mono">
+                {blog.summary}
+              </p>
+              <div className="flex items-center gap-4">
+                <Avatar>
+                  <AvatarImage
+                    alt={blog.author.name}
+                    className="object-cover"
+                    src={blog.author.avatar ?? "/images/astraq-avatar.png"}
+                  />
+                  <AvatarFallback>
+                    {blog.author.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  By <span className="font-medium">{blog.author.name}</span>
+                </div>
+                <div className="grow" />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Share2Icon className="size-4" strokeWidth={1} />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-fit p-0">
+                    <div className="flex flex-col">
+                      <Link
+                        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(path)}`}
+                        className="flex flex-row items-center gap-2 p-4"
+                      >
+                        <Linkedin className="size-4" />
+                      </Link>
+                      <Link
+                        href={`https://x.com/intent/post?url=${encodeURIComponent(path)}`}
+                        className="flex flex-row items-center gap-2 p-4"
+                      >
+                        <XDark className="size-4" />
+                      </Link>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <div className="aspect-16/9 overflow-hidden rounded-lg">
+                <Image
+                  alt={blog.title}
+                  className="h-full w-full object-cover"
+                  height={600}
+                  src={blog.banner ?? `/images/blogs/${blog.slug}.png`}
+                  width={1200}
+                  priority
+                  unoptimized
+                  fetchPriority="high"
+                />
+              </div>
+            </div>
+          </div>
+
+          <MobileTableOfContents headings={blog.headings} />
+
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_250px] relative gap-8">
+            <div className="prose prose-lg min-w-0">
+              <Mdx code={blog.html} />
+            </div>
+            <BlogSidebar headings={blog.headings} author={blog.author} />
+          </div>
+        </div>
+      </article>
+    </div>
+  );
+}

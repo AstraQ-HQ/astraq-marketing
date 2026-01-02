@@ -1,0 +1,129 @@
+@reference "./globals.css";
+
+.shiki .line.diff {
+  @apply !w-[calc(100%+2rem)];
+}
+
+.shiki .line.highlighted {
+  @apply -ml-4 !w-[calc(100%+2rem)] border-l-2 border-l-muted-foreground bg-muted pl-3.5;
+}
+
+.shiki .line.highlighted.error {
+  @apply border-l-2 border-l-[#ff3f5e] bg-[#ff3f5e29];
+}
+.shiki .line.highlighted.warning {
+  @apply border-l-2 border-l-[#eab308] bg-[#eab30829];
+}
+
+.shiki .line.diff.add {
+  @apply -ml-4 border-l-2 border-l-green-600 bg-green-500/10 pl-3.5;
+}
+
+.shiki .line.diff.remove {
+  @apply -ml-4 border-l-2 border-l-red-600 bg-red-500/10 pl-3.5;
+}
+
+.shiki .line.diff.add > *:first-child::before {
+  @apply absolute left-5 text-green-600 content-['+'];
+}
+
+.shiki .line.diff.remove > *:first-child::before {
+  @apply absolute left-5 text-red-600 content-['-'];
+}
+
+.shiki[data-show-line-numbers="false"] .line.diff.add > *:first-child::before,
+.shiki[data-show-line-numbers="false"]
+  .line.diff.remove
+  > *:first-child::before {
+  @apply -left-3;
+}
+
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="2"]
+  > .line.diff.add
+  > *:first-child::before,
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="2"]
+  > .line.diff.remove
+  > *:first-child::before {
+  @apply left-7;
+}
+
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="3"]
+  > .line.diff.add
+  > *:first-child::before,
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="3"]
+  > .line.diff.remove
+  > *:first-child::before {
+  @apply left-9;
+}
+
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="4"]
+  > .line.diff.add
+  > *:first-child::before,
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="4"]
+  > .line.diff.remove
+  > *:first-child::before {
+  @apply left-11;
+}
+
+.shiki.has-focused .line:not(:is(.focused)) {
+  @apply blur-[0.095rem];
+}
+
+.shiki.has-focused:hover .line {
+  @apply blur-none transition duration-200;
+}
+
+.shiki.has-focused .line.focused {
+  @apply blur-none;
+}
+
+.shiki {
+  @apply gap-0 p-4 font-mono;
+}
+
+.shiki code {
+  @apply inline-block w-full;
+}
+
+.shiki[data-show-line-numbers="true"] code {
+  counter-reset: step;
+  counter-increment: step 0;
+}
+
+.shiki .line {
+  @apply inline-block w-full;
+}
+
+.shiki[data-show-line-numbers="true"] .line::before {
+  content: counter(step);
+  counter-increment: step;
+  display: inline-block;
+  width: 0.75rem;
+  margin-right: 1.5rem;
+  text-align: right;
+  color: gray;
+}
+
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="2"]
+  > .line::before {
+  @apply w-5;
+}
+
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="3"]
+  > .line::before {
+  @apply w-7;
+}
+
+.shiki[data-show-line-numbers="true"]
+  code[data-line-numbers-max-digits="4"]
+  > .line::before {
+  @apply w-9;
+}

@@ -1,0 +1,53 @@
+@reference "./globals.css";
+
+.mdx > .steps:first-child > h3:first-child {
+  @apply mt-0;
+}
+
+.steps > h3 {
+  @apply mb-4 mt-8 text-base font-semibold;
+}
+
+:not(pre) > code {
+  @apply bg-muted mx-0.25 rounded-md px-1 py-0.5;
+}
+
+.default-callout {
+  @apply bg-gray-100 border-gray-300 dark:bg-gray-800/50 dark:border-gray-700;
+}
+
+.info-callout {
+  @apply bg-blue-50 border-blue-200 dark:bg-blue-950/50 dark:border-blue-800;
+}
+
+.success-callout {
+  @apply bg-green-50 border-green-200 dark:bg-green-950/50 dark:border-green-800;
+}
+
+.warning-callout {
+  @apply bg-yellow-50 border-yellow-200 dark:bg-yellow-950/50 dark:border-yellow-800;
+}
+
+.error-callout {
+  @apply bg-red-50 border-red-200 dark:bg-red-950/50 dark:border-red-800;
+}
+
+.default-callout :not(pre) > code {
+  @apply bg-gray-800/60 text-gray-50;
+}
+
+.info-callout :not(pre) > code {
+  @apply bg-blue-800/60 text-blue-50;
+}
+
+.success-callout :not(pre) > code {
+  @apply bg-green-800/60 text-green-50;
+}
+
+.warning-callout :not(pre) > code {
+  @apply bg-yellow-800/60 text-yellow-50;
+}
+
+.error-callout :not(pre) > code {
+  @apply bg-red-800/60 text-red-50;
+}

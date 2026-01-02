@@ -1,26 +1,155 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
+import { compileMDX } from "@content-collections/mdx";
+import rehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype";
+import {
+  transformerNotationDiff,
+  transformerNotationErrorLevel,
+  transformerNotationFocus,
+  transformerNotationHighlight,
+} from "@shikijs/transformers";
+import slugify from "@sindresorhus/slugify";
+import type { Heading, Paragraph } from "mdast";
+import { toString as mdastToString } from "mdast-util-to-string";
+import readingTime from "reading-time";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeKatex from "rehype-katex";
+import rehypeSlug from "rehype-slug";
+import rehypeStringify from "rehype-stringify";
+import remarkGemoji from "remark-gemoji";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import remarkRehype from "remark-rehype";
+import type { ShikiTransformer } from "shiki";
+import { unified } from "unified";
 import { z } from "zod";
+
+type Headings = {
+  depth: number;
+  value: string;
+  slug: string;
+}[];
+
+const headingProcessor = unified().use(remarkRehype).use(rehypeStringify);
+
+async function headingToHtml(node: Heading): Promise<string> {
+  const tempNode: Paragraph = {
+    type: "paragraph" as const,
+    children: node.children,
+  };
+  const result = await headingProcessor.run({
+    type: "root",
+    children: [tempNode],
+  } as Parameters<typeof headingProcessor.run>[0]);
+  const html = headingProcessor.stringify(result);
+  const match = html.match(/<p>([\s\S]*)<\/p>/);
+  return match ? match[1] : html;
+}
 
 const blogs = defineCollection({
   name: "blogs",
   directory: "content/blogs",
-  include: "**/*.md",
+  include: "**/*.mdx",
   schema: z.object({
     title: z.string(),
     summary: z.string(),
+    publishedAt: z.coerce.date(),
+    category: z.string(),
+    draft: z.boolean().default(false),
+    banner: z.string().optional(),
     content: z.string(),
+    author: z
+      .object({
+        name: z.string(),
+        bio: z.string().optional(),
+        avatar: z.string().optional(),
+      })
+      .optional()
+      .default({
+        name: "AstraQ Team",
+        bio: "The AstraQ Team writes about technology, security, and innovation.",
+      }),
   }),
-});
+  transform: async (document, context) => {
+    if (document.draft) {
+      return context.skip("blog is draft");
+    }
 
-function slugify(text: string) {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/[^\w-]+/g, "") // Remove all non-word chars
-    .replace(/--+/g, "-"); // Replace multiple - with single -
-}
+    const headingNodes: Heading[] = [];
+    const time = readingTime(document.content).text;
+
+    const html = await compileMDX(context, document, {
+      remarkPlugins: [
+        remarkMath,
+        remarkGemoji,
+        [remarkGfm, { singleTilde: false }],
+        [
+          ({ headingNodesRef }: { headingNodesRef: Heading[] }) =>
+            (tree) => {
+              for (const node of tree.children) {
+                if (node.type === "heading" && node.depth <= 3) {
+                  headingNodesRef.push(node);
+                }
+              }
+            },
+          { headingNodesRef: headingNodes },
+        ],
+      ],
+      rehypePlugins: [
+        rehypeSlug,
+        [rehypeAutolinkHeadings, { behavior: "wrap" }],
+        rehypeKatex,
+        [
+          rehypeShiki,
+          {
+            theme: "vitesse-light",
+            transformers: [
+              transformerNotationDiff(),
+              transformerNotationHighlight(),
+              transformerNotationFocus(),
+              transformerNotationErrorLevel(),
+              {
+                pre(hast) {
+                  hast.properties["data-meta"] = this.options.meta?.__raw;
+                  hast.properties["data-code"] = this.source;
+                  hast.properties["data-language"] = this.options.lang;
+                },
+                code(hast) {
+                  hast.properties["data-line-numbers-max-digits"] =
+                    this.lines.length.toString().length;
+                },
+              } satisfies ShikiTransformer,
+            ],
+            inline: "tailing-curly-colon",
+          } satisfies RehypeShikiOptions,
+        ],
+      ],
+    });
+
+    const processedHeadings: Headings = await Promise.all(
+      headingNodes.map(async (node) => ({
+        depth: node.depth,
+        value: await headingToHtml(node),
+        slug: slugify(mdastToString(node)),
+      })),
+    );
+
+    const cachedHeadings = await context.cache(
+      { content: document.content, _meta: document._meta },
+      () => processedHeadings,
+      {
+        key: "__headings",
+      },
+    );
+
+    return {
+      ...document,
+      html,
+      headings: cachedHeadings,
+      slug: document._meta.fileName.replace(".mdx", ""),
+      readingTime: time,
+    };
+  },
+});
 
 const products = defineCollection({
   name: "products",
