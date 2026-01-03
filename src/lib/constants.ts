@@ -141,6 +141,12 @@ export const siteConfig = {
           "Have questions? We'd love to hear from you.\nSend us a message and we'll respond as soon as possible.",
       },
     },
+    services: {
+      cta: {
+        text: "Schedule Consultation",
+        href: "https://cal.com/astraq-cyber-defence" as Route,
+      },
+    }
   },
   footer: {
     products: [

@@ -1,7 +1,7 @@
 "use client";
 
-import { BackedBySection } from "./_components/backed-by-section";
-import { ContactUsSection } from "./_components/contact-us-section";
+import { BackedBySection } from "./_components/backed-by";
+import { ContactUsSection } from "./_components/contact-us";
 import { FeaturedProducts } from "./_components/featured-products";
 import { FeaturedServices } from "./_components/featured-services";
 import { HeroSection } from "./_components/hero-section";

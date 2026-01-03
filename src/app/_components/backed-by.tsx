@@ -6,7 +6,7 @@ export function BackedBySection() {
   const { backers } = siteConfig.pages.home.backedBy;
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 border-b border-border">
+    <section className="px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center">
           {backers.map((backer) => (

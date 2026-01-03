@@ -28,6 +28,7 @@
     "cobe": "0.6.5",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.1",
+    "katex": "^0.16.27",
     "lucide-react": "^0.562.0",
     "mdast-util-to-string": "^4.0.0",
     "mermaid": "^11.12.2",
