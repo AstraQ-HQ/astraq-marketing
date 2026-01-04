@@ -48,6 +48,10 @@ export default async function Image({ params }: Props) {
   const mimeType = ext === "jpg" ? "jpeg" : ext;
   const bannerUrl = `data:image/${mimeType};base64,${bannerBuffer.toString("base64")}`;
 
+  const logoPath = join(process.cwd(), "src", "logo.svg");
+  const logoBuffer = readFileSync(logoPath);
+  const logoUrl = `data:image/svg+xml;base64,${logoBuffer.toString("base64")}`;
+
   return new ImageResponse(
     <div
       style={{
@@ -98,21 +102,8 @@ export default async function Image({ params }: Props) {
           backgroundColor: "rgba(255, 255, 255, 0.5)",
         }}
       >
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            backgroundColor: "#0a0a0a",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 24,
-            fontWeight: 700,
-            color: "#fff",
-          }}
-        >
-          A
-        </div>
+        {/* biome-ignore lint/performance/noImgElement: OG image generation requires img */}
+        <img src={logoUrl} alt="" width={40} height={40} />
         <span
           style={{
             color: "#000",

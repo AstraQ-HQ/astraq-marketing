@@ -19,6 +19,7 @@ import { MobileTableOfContents } from "./_components/toc";
 import "@/styles/mdx.css";
 import "@/styles/shiki.css";
 import "katex/dist/katex.min.css";
+import { env } from "@/env";
 import { siteConfig } from "@/lib/constants";
 import logo from "@/logo.svg";
 
@@ -28,10 +29,42 @@ export async function generateMetadata({
   const { slug } = await params;
   const blog = allBlogsByDate.find((blog) => blog.slug === slug);
 
+  const ogImageUrl = `${env.NEXT_PUBLIC_BASE_URL}/blog/${slug}/opengraph-image`;
+
   return {
     title: `${blog?.title} | AstraQ Blog`,
     description: blog?.summary,
     keywords: blog?.category && [blog.category, "blog", "astraq", "technology"],
+    openGraph: {
+      title: blog?.title,
+      description: blog?.summary,
+      type: "article",
+      publishedTime: blog?.publishedAt.toISOString(),
+      authors: [blog?.author.name ?? "AstraQ"],
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: blog?.title,
+          type: "image/png",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: blog?.title,
+      description: blog?.summary,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: blog?.title,
+          type: "image/png",
+        },
+      ],
+    },
   };
 }
 
