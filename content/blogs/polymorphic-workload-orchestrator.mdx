@@ -1,7 +1,7 @@
 ---
 title: "Building a **Polymorphic Workload Orchestrator** with *Go* and *Kubernetes*"
 summary: "Learn how to build a scalable control plane for on-demand AI agents and data tasks using Go interfaces, Redis queues, and Kubernetes."
-publishedAt: 2026-01-06
+publishedAt: 2026-01-05
 category: "System Design"
 draft: false
 ---
@@ -287,3 +287,10 @@ We've built a robust foundation. Our Application Layer is decoupled from the Inf
 But what about those _untrusted_ AI agents? Running `rm -rf /` in a container is still dangerous.
 
 In <EmbedBlog slug="secure-microvm-runtime" placeholder="Part 2" />, we will implement the `FirecrackerRuntime` struct. We'll show how to use the exact same interface to spin up micro-VMs that offer hardware-level isolation for hostile workloads, without changing a single line of our API code.
+
+### Read the Series
+
+- **Polymorphic Workload Orchestrator** (The Foundation)
+- <EmbedBlog slug="secure-microvm-runtime" /> (The Compute)
+- <EmbedBlog slug="secure-agent-networking" /> (The Network)
+- <EmbedBlog slug="enterprise-audit-logging" /> (The Audit Trail)
