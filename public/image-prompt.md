@@ -1,6 +1,7 @@
 Create a professional blog banner image (16:9 aspect ratio, 1200x675px recommended).
 
 **BRAND STYLE GUIDE:**
+
 - Color palette: Pure monochrome/grayscale ONLY
   - Background: Pure white (#FFFFFF)
   - Primary elements: Near-black (10% lightness)
@@ -12,6 +13,7 @@ Create a professional blog banner image (16:9 aspect ratio, 1200x675px recommend
 - Abstract and conceptual - no literal representations
 
 **DESIGN PRINCIPLES:**
+
 - **Very subtle** background texture only (fine grids, dots, or lines)
 - **No 3D effects, no shadows, no perspective, no depth-based gradients**
 - Consistent, thin line weights throughout
@@ -21,6 +23,7 @@ Create a professional blog banner image (16:9 aspect ratio, 1200x675px recommend
 - NO text, titles, or words in the image
 
 **RESTRICTIONS:**
+
 - NO saturated colors (no blue, red, green, orange, etc.)
 - NO rounded corners or soft organic shapes
 - NO stock photo elements or realistic photography

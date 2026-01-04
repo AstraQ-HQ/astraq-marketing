@@ -1,7 +1,8 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { allBlogsByDate } from "@/lib/content";
-import { env } from "@/env";
-import { notFound } from "next/navigation";
 
 export const alt = "AstraQ Blog";
 
@@ -33,7 +34,7 @@ export default async function Image({ params }: Props) {
   const blog = allBlogsByDate.find((b) => b.slug === slug);
 
   if (!blog) {
-    notFound()
+    notFound();
   }
 
   const [boldFont, regularFont] = await Promise.all([
@@ -41,158 +42,161 @@ export default async function Image({ params }: Props) {
     spaceMonoRegular,
   ]);
 
-  const bannerUrl = `${env.NEXT_PUBLIC_BASE_URL}${blog.banner}`;
+  const bannerPath = join(process.cwd(), "public", blog.banner);
+  const bannerBuffer = readFileSync(bannerPath);
+  const ext = blog.banner.split(".").pop() || "png";
+  const mimeType = ext === "jpg" ? "jpeg" : ext;
+  const bannerUrl = `data:image/${mimeType};base64,${bannerBuffer.toString("base64")}`;
 
   return new ImageResponse(
-    (
-      <div
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        fontFamily: "Space Mono",
+      }}
+    >
+      {/* biome-ignore lint/performance/noImgElement: This needs normal img. It is not powered by next image */}
+      <img
+        src={bannerUrl}
+        alt=""
         style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
           width: "100%",
           height: "100%",
+          objectFit: "cover",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 100%)",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: 40,
+          right: 40,
+          padding: "8px",
           display: "flex",
-          flexDirection: "column",
-          position: "relative",
-          fontFamily: "Space Mono",
+          alignItems: "center",
+          gap: "12px",
+          borderRadius: "6px",
+          backgroundColor: "rgba(255, 255, 255, 0.5)",
         }}
       >
-        <img
-          src={bannerUrl}
-          alt=""
+        <div
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
+            width: 40,
+            height: 40,
+            backgroundColor: "#0a0a0a",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 24,
+            fontWeight: 700,
+            color: "#fff",
           }}
-        />
+        >
+          A
+        </div>
+        <span
+          style={{
+            color: "#000",
+            fontSize: 20,
+            fontWeight: 400,
+          }}
+        >
+          AstraQ Blog
+        </span>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: "48px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+        }}
+      >
+        <h1
+          style={{
+            color: "#fff",
+            fontSize: 56,
+            fontWeight: 700,
+            lineHeight: 1.1,
+            margin: 0,
+            maxWidth: "90%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {blog.title}
+        </h1>
+
+        <p
+          style={{
+            color: "rgba(255,255,255,0.8)",
+            fontSize: 24,
+            fontWeight: 400,
+            lineHeight: 1.4,
+            margin: 0,
+            maxWidth: "80%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {blog.summary}
+        </p>
 
         <div
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 100%)",
-          }}
-        />
-
-        <div
-          style={{
-            position: "absolute",
-            bottom: 40,
-            right: 40,
-            padding: "8px",
             display: "flex",
             alignItems: "center",
             gap: "12px",
-            borderRadius: "6px",
-            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            marginTop: "8px",
           }}
         >
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              backgroundColor: "#0a0a0a",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 24,
-              fontWeight: 700,
-              color: "#fff",
-            }}
-          >
-            A
-          </div>
           <span
             style={{
-              color: "#000",
-              fontSize: 20,
+              backgroundColor: "rgba(255,255,255,0.15)",
+              color: "#fff",
+              padding: "8px 16px",
+              borderRadius: "6px",
+              fontSize: 18,
               fontWeight: 400,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
             }}
           >
-            AstraQ Blog
+            #{blog.category}
           </span>
         </div>
-
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            padding: "48px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-          }}
-        >
-          <h1
-            style={{
-              color: "#fff",
-              fontSize: 56,
-              fontWeight: 700,
-              lineHeight: 1.1,
-              margin: 0,
-              maxWidth: "90%",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-            }}
-          >
-            {blog.title}
-          </h1>
-
-          <p
-            style={{
-              color: "rgba(255,255,255,0.8)",
-              fontSize: 24,
-              fontWeight: 400,
-              lineHeight: 1.4,
-              margin: 0,
-              maxWidth: "80%",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-            }}
-          >
-            {blog.summary}
-          </p>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              marginTop: "8px",
-            }}
-          >
-            <span
-              style={{
-                backgroundColor: "rgba(255,255,255,0.15)",
-                color: "#fff",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                fontSize: 18,
-                fontWeight: 400,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-              }}
-            >
-              #{blog.category}
-            </span>
-          </div>
-        </div>
       </div>
-    ),
+    </div>,
     {
       ...size,
       fonts: [

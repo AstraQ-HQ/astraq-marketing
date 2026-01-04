@@ -28,6 +28,7 @@ import { FileTree } from "./file-tree";
 import { GithubLink } from "./github-link";
 import { Kbd } from "./kbd";
 import { Link } from "./link";
+import { LLMOnly } from "./llm-only";
 
 const components = {
   Accordion: ({
@@ -296,6 +297,7 @@ const components = {
   Kbd,
   GithubLink,
   FileTree,
+  LLMOnly,
 };
 
 interface MdxProps {
