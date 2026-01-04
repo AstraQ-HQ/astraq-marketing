@@ -23,10 +23,10 @@ export function EmbedBlog({
     <HoverCard>
       <HoverCardTrigger asChild>
         <Link
-          className="no-underline! mx-1 inline-flex cursor-pointer items-center gap-1 rounded-sm border border-border bg-secondary px-1 py-0.5 text-foreground text-sm transition-colors duration-200 hover:bg-accent"
+          className="no-underline! mx-1 inline-flex cursor-pointer items-center gap-1 rounded-sm border border-border bg-card px-1 py-0.5 text-foreground text-xs transition-colors duration-200 hover:bg-accent"
           href={`/blog/${blog.slug}`}
         >
-          <NotepadText className="mr-1 h-4 w-4" />
+          <NotepadText className="mr-1 size-3.5" strokeWidth={1} />
           {placeholder ?? blog.title}
         </Link>
       </HoverCardTrigger>

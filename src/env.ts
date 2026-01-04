@@ -10,8 +10,10 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string(),
+    NEXT_PUBLIC_BASE_URL: z.url(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   },
 });

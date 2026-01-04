@@ -1,6 +1,8 @@
 import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/constants";
+import logo from "@/logo.svg";
 
 export function Footer() {
   return (
@@ -9,12 +11,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold">
-                  {/* FIXME(logo): Use proper logo */}
-                  {siteConfig.name.charAt(0)}
-                </span>
-              </div>
+              <Image src={logo} alt={siteConfig.name} className="w-8 h-8" />
               <span className="font-mono text-lg">{siteConfig.name}</span>
             </div>
             <p className="text-sm opacity-80 mb-4">{siteConfig.description}</p>

@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Linkedin, XDark } from "@/components/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +19,8 @@ import { MobileTableOfContents } from "./_components/toc";
 import "@/styles/mdx.css";
 import "@/styles/shiki.css";
 import "katex/dist/katex.min.css";
+import { siteConfig } from "@/lib/constants";
+import logo from "@/logo.svg";
 
 export async function generateMetadata({
   params,
@@ -67,22 +68,10 @@ export default async function Page({ params }: PageProps<"/blog/[slug]">) {
               <p className="mb-6 text-muted-foreground font-mono">
                 {blog.summary}
               </p>
-              <div className="flex items-center gap-4">
-                <Avatar>
-                  <AvatarImage
-                    alt={blog.author.name}
-                    className="object-cover"
-                    src={blog.author.avatar ?? "/images/astraq-avatar.png"}
-                  />
-                  <AvatarFallback>
-                    {blog.author.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
+              <div className="flex items-center gap-4 font-sm">
+                <Image src={logo} alt={siteConfig.name} className="w-8 h-8" />
                 <div>
-                  By <span className="font-medium">{blog.author.name}</span>
+                  By <span className="font-mono">{blog.author.name}</span>
                 </div>
                 <div className="grow" />
                 <Popover>
@@ -133,7 +122,7 @@ export default async function Page({ params }: PageProps<"/blog/[slug]">) {
             <div className="prose prose-lg min-w-0">
               <Mdx code={blog.html} />
             </div>
-            <BlogSidebar headings={blog.headings} author={blog.author} />
+            <BlogSidebar headings={blog.headings} />
           </div>
         </div>
       </article>

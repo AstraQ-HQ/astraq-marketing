@@ -2,6 +2,7 @@
 
 import { MenuIcon, XIcon } from "lucide-react";
 import type { Route } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/sheet";
 import { siteConfig } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import logo from "@/logo.svg";
 
 export function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -47,12 +49,7 @@ export function NavBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">
-                {/* FIXME(logo): Use proper logo */}
-                {siteConfig.name.charAt(0)}
-              </span>
-            </div>
+            <Image src={logo} alt={siteConfig.name} className="w-8 h-8" />
             <span className="hidden sm:inline font-mono text-xl text-primary">
               {siteConfig.name}
             </span>
@@ -86,12 +83,11 @@ export function NavBar() {
               <SheetContent side="top" className="p-6">
                 <SheetHeader className="p-0 flex flex-row items-center justify-between space-y-0">
                   <SheetTitle className="text-left flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
-                      <span className="text-primary-foreground font-bold text-lg">
-                        {/* FIXME(logo): Use proper logo */}
-                        {siteConfig.name.charAt(0)}
-                      </span>
-                    </div>
+                    <Image
+                      src={logo}
+                      alt={siteConfig.name}
+                      className="w-8 h-8"
+                    />
                     {siteConfig.name}
                   </SheetTitle>
                   <SheetClose asChild>
