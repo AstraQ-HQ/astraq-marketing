@@ -1,11 +1,11 @@
 "use client";
 
+import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useActiveHeading } from "@/hooks/use-active-heading";
 import type { Blog } from "@/lib/content";
 import { cn } from "@/lib/utils";
-import { ChevronRightIcon } from "lucide-react";
 
 interface TableOfContentsProps {
   headings: Blog["headings"];
@@ -113,7 +113,10 @@ export function DesktopTableOfContents({ headings }: TableOfContentsProps) {
                 }}
                 style={{ paddingLeft: `${(heading.depth - 1) * 10}px` }}
               >
-                <ChevronRightIcon className="size-3 text-foreground mr-2" strokeWidth={1} />
+                <ChevronRightIcon
+                  className="size-3 text-foreground mr-2"
+                  strokeWidth={1}
+                />
                 <span
                   className={cn(
                     "truncate text-base font-medium",

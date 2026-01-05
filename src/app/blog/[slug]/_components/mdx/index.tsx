@@ -234,7 +234,7 @@ const components = {
   Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
     <h3
       className={cn(
-        "mt-8 scroll-m-20 font-mono text-xl tracking-tight",
+        "mt-8 step scroll-m-20 font-mono text-xl tracking-tight",
         className,
       )}
       {...props}
@@ -242,7 +242,7 @@ const components = {
   ),
   Steps: ({ ...props }) => (
     <div
-      className="[&>h3]:step steps mb-12 [counter-reset:step] md:ml-4 md:border-l md:pl-8"
+      className="steps mb-12 [counter-reset:step] md:ml-4 md:border-l md:pl-8"
       {...props}
     />
   ),

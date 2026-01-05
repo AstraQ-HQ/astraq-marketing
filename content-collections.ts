@@ -90,6 +90,12 @@ const blogs = defineCollection({
         name: "AstraQ Team",
         bio: "The AstraQ Team writes about technology, security, and innovation.",
       }),
+    series: z
+      .object({
+        name: z.string(),
+        part: z.number(),
+      })
+      .optional(),
   }),
   transform: async (document, context) => {
     if (document.draft) {
@@ -168,6 +174,72 @@ const blogs = defineCollection({
       document.title,
     );
 
+    let seriesData: {
+      name: string;
+      part: number;
+      previous: { slug: string; title: string } | null;
+      next: { slug: string; title: string } | null;
+    } | null = null;
+
+    if (document.series) {
+      const seriesName = document.series.name;
+      const allDocs = await context.collection.documents();
+      const seriesDocs = allDocs
+        .filter(
+          (doc) =>
+            doc.series?.name === seriesName &&
+            !doc.draft &&
+            doc._meta.filePath !== document._meta.filePath,
+        )
+        .toSorted((a, b) => (a.series?.part ?? 0) - (b.series?.part ?? 0));
+
+      const allSeriesDocs = [...seriesDocs, document].toSorted(
+        (a, b) => (a.series?.part ?? 0) - (b.series?.part ?? 0),
+      );
+
+      const currentIndex = allSeriesDocs.findIndex(
+        (doc) => doc._meta.filePath === document._meta.filePath,
+      );
+
+      const previousDoc =
+        currentIndex > 0 ? allSeriesDocs[currentIndex - 1] : null;
+      const nextDoc =
+        currentIndex < allSeriesDocs.length - 1
+          ? allSeriesDocs[currentIndex + 1]
+          : null;
+
+      const { plain: prevTitle } = previousDoc
+        ? await processTitle(previousDoc.title)
+        : { plain: "" };
+      const { plain: nextTitle } = nextDoc
+        ? await processTitle(nextDoc.title)
+        : { plain: "" };
+
+      const prevSlug = previousDoc
+        ? previousDoc._meta.fileName.replace(".mdx", "")
+        : "";
+      const nextSlug = nextDoc
+        ? nextDoc._meta.fileName.replace(".mdx", "")
+        : "";
+
+      seriesData = {
+        name: document.series.name,
+        part: document.series.part,
+        previous: previousDoc
+          ? {
+              slug: prevSlug,
+              title: prevTitle,
+            }
+          : null,
+        next: nextDoc
+          ? {
+              slug: nextSlug,
+              title: nextTitle,
+            }
+          : null,
+      };
+    }
+
     return {
       ...document,
       banner: document.banner ?? `/images/blog/${slug}.png`,
@@ -177,6 +249,7 @@ const blogs = defineCollection({
       headings: cachedHeadings,
       slug,
       readingTime: time,
+      series: seriesData,
     };
   },
 });

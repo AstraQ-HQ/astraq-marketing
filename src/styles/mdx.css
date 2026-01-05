@@ -6,7 +6,7 @@
 }
 
 .step::before {
-  @apply text-muted-foreground right-0 mr-2 hidden size-7 items-center justify-center rounded-full text-center -indent-px font-mono text-sm md:absolute md:flex;
+  @apply text-muted-foreground hidden size-8 items-center justify-center rounded-full text-center -indent-px font-mono text-base border bg-muted ring-4 ring-background md:absolute md:flex md:left-0 md:-ml-8 md:-translate-x-1/2;
   content: counter(step);
 }
 
@@ -14,15 +14,15 @@
   @apply !mt-0;
 }
 
-.steps:first-child > h3:first-child {
+.steps:first-child > .step:first-child {
   @apply !mt-0;
 }
 
-.steps > h3 {
-  @apply !mt-16;
+.steps > .step {
+  @apply !mt-12;
 }
 
-.steps > h3 + p {
+.steps > .step + p {
   @apply !mt-2;
 }
 

@@ -1,9 +1,12 @@
 ---
 title: "Building a **Polymorphic Workload Orchestrator** with *Go* and *Kubernetes*"
 summary: "Learn how to build a scalable control plane for on-demand AI agents and data tasks using Go interfaces, Redis queues, and Kubernetes."
-publishedAt: 2026-01-06T10:00:00
+publishedAt: 2026-01-06
 category: "System Design"
 draft: false
+series:
+  name: "Secure Workload Orchestration"
+  part: 1
 ---
 
 In the era of AI agents and on-demand data processing, static infrastructure doesn't cut it. You might need to spin up a secure sandbox for a user's code one second, and a heavy data aggregation job the next. Standard Kubernetes Deployments are great for long-running services, but they struggle with the dynamic, ephemeral nature of these "per-request" workloads.

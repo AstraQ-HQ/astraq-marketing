@@ -10,8 +10,20 @@ import {
   type Testimonial,
 } from "../../.content-collections/generated";
 
-export const allBlogsByDate = allBlogs
-  .toSorted((a, b) => compareDesc(a.publishedAt, b.publishedAt));
+function sortBlogsByDateAndPart(a: Blog, b: Blog): number {
+  const dateComparison = compareDesc(a.publishedAt, b.publishedAt);
+  if (dateComparison !== 0) {
+    return dateComparison;
+  }
+
+  if (a.series?.name === b.series?.name) {
+    return (b.series?.part ?? 0) - (a.series?.part ?? 0);
+  }
+
+  return 0;
+}
+
+export const allBlogsByDate = allBlogs.toSorted(sortBlogsByDateAndPart);
 
 export const allFeaturedProducts = allProducts.filter((p) => p.featured);
 export const allFeaturedServices = allServices.filter((s) => s.featured);

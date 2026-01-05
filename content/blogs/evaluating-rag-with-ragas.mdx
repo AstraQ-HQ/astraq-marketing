@@ -1,9 +1,12 @@
 ---
 title: "*Evaluating* RAG Systems with **RAGAS**: Metrics That *Matter*"
 summary: "A comprehensive guide to evaluating RAG systems using RAGAS framework. Learn how to measure faithfulness, answer relevancy, context precision, and context recall to build reliable AI applications."
-publishedAt: 2026-01-02T12:00:00
+publishedAt: 2026-01-02
 category: "AI & Machine Learning"
 draft: false
+series:
+  name: "RAG Complete Guide"
+  part: 3
 ---
 
 In our <EmbedBlog slug="production-ready-rag-guide" placeholder="RAG Complete Guide" /> and <EmbedBlog slug="multi-hop-rag-agents" placeholder="Advanced RAG Agents" /> articles, we built production-ready retrieval systems with hybrid search and multi-hop reasoning. But how do you know if your RAG system is actually _good_? Enter **RAGAS**, the gold standard for evaluating retrieval-augmented generation systems.
@@ -71,7 +74,7 @@ graph TB
 
 <Steps>
 
-### Install Dependencies
+<Step>Install Dependencies</Step>
 
 Add RAGAS to your existing RAG project:
 
@@ -79,7 +82,7 @@ Add RAGAS to your existing RAG project:
 uv add ragas datasets
 ```
 
-### Prepare Your Evaluation Dataset
+<Step>Prepare Your Evaluation Dataset</Step>
 
 RAGAS requires a specific format with questions, ground truth answers, and retrieved contexts:
 
@@ -104,7 +107,7 @@ eval_data = {
 dataset = Dataset.from_dict(eval_data)
 ```
 
-### Generate Answers and Contexts
+<Step>Generate Answers and Contexts</Step>
 
 Run your RAG system on the evaluation questions:
 

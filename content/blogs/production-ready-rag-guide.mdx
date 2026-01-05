@@ -1,9 +1,12 @@
 ---
 title: "Building **Production-Ready** RAG Systems: A Complete Guide"
 summary: "A comprehensive guide to Retrieval-Augmented Generation (RAG) systems using Python, Qdrant, and FastEmbed with hybrid search combining dense, sparse, and late interaction embeddings."
-publishedAt: 2026-01-02T10:00:00
+publishedAt: 2026-01-02
 category: "AI & Machine Learning"
 draft: false
+series:
+  name: "RAG Complete Guide"
+  part: 1
 ---
 
 Retrieval-Augmented Generation (RAG) has become the go-to architecture for building AI applications that need access to private or up-to-date information. In this comprehensive guide, we'll explore everything you need to know about building production-ready RAG systems using Python, Qdrant, and FastEmbed.
@@ -41,7 +44,7 @@ graph LR
 
 <Steps>
 
-### Install Dependencies
+<Step>Install Dependencies</Step>
 
 First, create a new Python project with [uv](https://docs.astral.sh/uv/):
 
@@ -55,7 +58,7 @@ Install the required packages:
 uv add qdrant-client fastembed openai python-dotenv
 ```
 
-### Configure Environment Variables
+<Step>Configure Environment Variables</Step>
 
 Create a `.env` file with your API keys:
 
@@ -67,7 +70,7 @@ QDRANT_URL=http://localhost:6333
 # QDRANT_API_KEY=...
 ```
 
-### Start Qdrant
+<Step>Start Qdrant</Step>
 
 Run Qdrant locally using Docker:
 

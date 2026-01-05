@@ -1,5 +1,5 @@
 import { formatDate } from "date-fns";
-import { Share2Icon } from "lucide-react";
+import { ChevronLeft, ChevronRight, Share2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -159,6 +159,42 @@ export default async function Page({ params }: PageProps<"/blog/[slug]">) {
             </div>
             <DesktopTableOfContents headings={blog.headings} />
           </div>
+
+          {/* Series Navigation */}
+          {blog.series && (blog.series.previous || blog.series.next) && (
+            <div className="mt-16 pt-8 border-t border-border">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {blog.series.previous && (
+                  <Link
+                    href={`/blog/${blog.series.previous.slug}`}
+                    className="group p-6 border border-border rounded-lg hover:border-accent hover:shadow-lg transition-all"
+                  >
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                      <ChevronLeft className="size-4" />
+                      <span>Previous Part</span>
+                    </div>
+                    <h3 className="font-mono text-lg group-hover:text-accent-foreground transition-colors">
+                      {blog.series.previous.title}
+                    </h3>
+                  </Link>
+                )}
+                {blog.series.next && (
+                  <Link
+                    href={`/blog/${blog.series.next.slug}`}
+                    className="group p-6 border border-border rounded-lg hover:border-accent hover:shadow-lg transition-all md:text-right"
+                  >
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2 md:justify-end">
+                      <span>Next Part</span>
+                      <ChevronRight className="size-4" />
+                    </div>
+                    <h3 className="font-mono text-lg group-hover:text-accent-foreground transition-colors">
+                      {blog.series.next.title}
+                    </h3>
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </article>
     </div>

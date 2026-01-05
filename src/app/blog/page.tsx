@@ -40,7 +40,7 @@ export default function BlogPage() {
 
   return (
     <>
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-secondary via-background to-background">
+      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-secondary via-background to-background">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="font-mono text-5xl sm:text-6xl text-primary mb-4">
             Blog
@@ -91,7 +91,7 @@ export default function BlogPage() {
           <div className="max-w-7xl mx-auto">
             <Link href={`/blog/${featuredPost.slug}`} className="block group">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-card rounded-lg overflow-hidden border border-border p-8 transition-all group-hover:border-accent group-hover:shadow-lg">
-                <div className="relative bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg overflow-hidden min-h-[320px]">
+                <div className="relative bg-linear-to-br from-accent/10 to-accent/5 rounded-lg overflow-hidden min-h-[320px]">
                   <Image
                     src={featuredPost.banner}
                     alt={featuredPost.title}
@@ -101,9 +101,17 @@ export default function BlogPage() {
                   />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <span className="text-accent-foreground font-semibold text-sm mb-2">
-                    Latest
-                  </span>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-accent-foreground font-semibold text-sm">
+                      Latest
+                    </span>
+                    {featuredPost.series && (
+                      <span className="text-xs font-semibold text-muted-foreground bg-muted px-3 py-1 rounded-sm">
+                        {featuredPost.series.name} • Part{" "}
+                        {featuredPost.series.part}
+                      </span>
+                    )}
+                  </div>
                   <h2
                     className="font-mono text-3xl text-primary mb-3 group-hover:text-accent-foreground transition-colors"
                     // biome-ignore lint/security/noDangerouslySetInnerHtml: This is trusted content from our CMS
@@ -144,7 +152,7 @@ export default function BlogPage() {
                     transition: `opacity 700ms ${index * 100}ms, transform 700ms ${index * 100}ms, box-shadow 300ms, border-color 300ms`,
                   }}
                 >
-                  <div className="relative w-full h-40 bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg mb-4 overflow-hidden">
+                  <div className="relative w-full h-40 bg-linear-to-br from-accent/10 to-accent/5 rounded-lg mb-4 overflow-hidden">
                     <Image
                       src={post.banner}
                       alt={post.title}
@@ -152,9 +160,16 @@ export default function BlogPage() {
                       className="object-cover"
                     />
                   </div>
-                  <span className="text-xs font-semibold text-accent-foreground bg-accent/10 px-3 py-1 rounded-sm inline-block mb-3">
-                    {post.category}
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className="text-xs font-semibold text-accent-foreground bg-accent/10 px-3 py-1 rounded-sm">
+                      {post.category}
+                    </span>
+                    {post.series && (
+                      <span className="text-xs font-semibold text-muted-foreground bg-muted px-3 py-1 rounded-sm">
+                        {post.series.name} • Part {post.series.part}
+                      </span>
+                    )}
+                  </div>
                   <h3
                     className="font-mono text-lg text-primary mb-2 group-hover:text-accent-foreground transition-colors"
                     // biome-ignore lint/security/noDangerouslySetInnerHtml: This is trusted content from our CMS
