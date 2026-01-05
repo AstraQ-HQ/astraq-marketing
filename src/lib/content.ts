@@ -10,10 +10,7 @@ import {
   type Testimonial,
 } from "../../.content-collections/generated";
 
-const today = new Date();
-
 export const allBlogsByDate = allBlogs
-  .filter((blog) => blog.publishedAt <= today)
   .toSorted((a, b) => compareDesc(a.publishedAt, b.publishedAt));
 
 export const allFeaturedProducts = allProducts.filter((p) => p.featured);
