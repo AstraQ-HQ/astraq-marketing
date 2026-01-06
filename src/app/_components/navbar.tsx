@@ -32,10 +32,19 @@ export function NavBar() {
   };
 
   useEffect(() => {
+    let lastScrollTime = 0;
+    const throttleMs = 100;
+
     const handleScroll = () => {
+      const now = Date.now();
+      if (now - lastScrollTime < throttleMs) return;
+      lastScrollTime = now;
       setIsScrolled(window.scrollY > 10);
     };
-    window.addEventListener("scroll", handleScroll);
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 

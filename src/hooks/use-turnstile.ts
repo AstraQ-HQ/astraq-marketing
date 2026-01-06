@@ -1,4 +1,4 @@
-import { type RefObject, useCallback, useEffect, useState } from "react";
+import { type RefObject, useCallback, useEffect, useRef } from "react";
 import { env } from "@/env";
 
 declare global {
@@ -28,16 +28,14 @@ export function useTurnstile(
   ref: RefObject<HTMLDivElement | null>,
   updateToken: (token: string) => void,
 ) {
-  const [turnstileWidgetId, setTurnstileWidgetId] = useState<string | null>(
-    null,
-  );
+  const widgetIdRef = useRef<string | null>(null);
 
   const buildTurnstile = useCallback(() => {
     if (!ref.current || !window.turnstile) {
       return;
     }
 
-    if (turnstileWidgetId) {
+    if (widgetIdRef.current) {
       return;
     }
 
@@ -63,11 +61,11 @@ export function useTurnstile(
           }
         },
       });
-      setTurnstileWidgetId(widgetId);
+      widgetIdRef.current = widgetId;
     } catch (e) {
       console.error("Turnstile render error:", e);
     }
-  }, [ref, updateToken, turnstileWidgetId]);
+  }, [ref, updateToken]);
 
   const resetTurnstile = useCallback(() => {
     if (!ref.current || !window.turnstile) {
@@ -77,19 +75,19 @@ export function useTurnstile(
   }, [ref]);
 
   useEffect(() => {
-    if (window.turnstile && !turnstileWidgetId) {
+    if (window.turnstile && !widgetIdRef.current) {
       buildTurnstile();
     }
-  }, [buildTurnstile, turnstileWidgetId]);
+  }, [buildTurnstile]);
 
   useEffect(() => {
     return () => {
-      if (turnstileWidgetId && window.turnstile) {
-        window.turnstile.remove(turnstileWidgetId);
-        setTurnstileWidgetId(null);
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.remove(widgetIdRef.current);
+        widgetIdRef.current = null;
       }
     };
-  }, [turnstileWidgetId]);
+  }, []);
 
   return { buildTurnstile, resetTurnstile };
 }

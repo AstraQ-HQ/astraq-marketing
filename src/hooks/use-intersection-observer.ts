@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function useIntersectionObserver(options = {}) {
+export function useIntersectionObserver() {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -16,7 +16,6 @@ export function useIntersectionObserver(options = {}) {
       },
       {
         threshold: 0.1,
-        ...options,
       },
     );
 
@@ -29,7 +28,7 @@ export function useIntersectionObserver(options = {}) {
         observer.unobserve(ref.current);
       }
     };
-  }, [options]);
+  }, []);
 
   return { ref, isVisible };
 }

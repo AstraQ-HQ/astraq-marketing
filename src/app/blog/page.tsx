@@ -1,7 +1,13 @@
 "use client";
 
 import { formatDate } from "date-fns";
-import { CalendarIcon, CheckIcon, FilterIcon, SearchIcon, XIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  CheckIcon,
+  FilterIcon,
+  SearchIcon,
+  XIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { BlogBannerImage } from "@/components/blog-banner-image";
@@ -30,19 +36,15 @@ export default function BlogPage() {
   const [filterOpen, setFilterOpen] = useState(false);
   const { ref, isVisible } = useIntersectionObserver();
 
-  const categories = useMemo(() => {
-    const uniqueCategories = new Set(
-      allBlogsByDate.map((blog) => blog.category),
-    );
-    return Array.from(uniqueCategories).sort();
-  }, []);
-
-  const categoryCounts = useMemo(() => {
+  const { categories, categoryCounts } = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const blog of allBlogsByDate) {
       counts[blog.category] = (counts[blog.category] || 0) + 1;
     }
-    return counts;
+    return {
+      categories: Object.keys(counts).sort(),
+      categoryCounts: counts,
+    };
   }, []);
 
   const filteredPosts = useMemo(() => {
@@ -57,10 +59,9 @@ export default function BlogPage() {
     });
   }, [searchTerm, selectedCategories]);
 
-  const featuredPost = selectedCategories.length === 0 ? filteredPosts[0] : null;
-  const otherPosts = featuredPost
-    ? filteredPosts.filter((p) => p.slug !== featuredPost.slug)
-    : filteredPosts;
+  const featuredPost =
+    selectedCategories.length === 0 ? filteredPosts[0] : null;
+  const otherPosts = featuredPost ? filteredPosts.slice(1) : filteredPosts;
 
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
@@ -114,8 +115,7 @@ export default function BlogPage() {
                 <Button
                   variant="outline"
                   size="icon"
-                  className=
-                    "h-12 w-12 shrink-0 relative border-border!"
+                  className="h-12 w-12 shrink-0 relative border-border!"
                 >
                   <FilterIcon size={20} strokeWidth={1.5} />
                   {selectedCategories.length > 0 && (
@@ -131,32 +131,29 @@ export default function BlogPage() {
                   <CommandList>
                     <CommandEmpty>No categories found.</CommandEmpty>
                     <CommandGroup heading="Categories">
-                      {categories.map((category) => {
-                        const isSelected = selectedCategories.includes(category);
-                        return (
-                          <CommandItem
-                            key={category}
-                            value={category}
-                            onSelect={() => toggleCategory(category)}
-                            className="cursor-pointer"
+                      {categories.map((category) => (
+                        <CommandItem
+                          key={category}
+                          value={category}
+                          onSelect={() => toggleCategory(category)}
+                          className="cursor-pointer"
+                        >
+                          <div
+                            className={cn(
+                              "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                              selectedCategories.includes(category)
+                                ? "bg-primary text-primary-foreground"
+                                : "opacity-50 [&_svg]:invisible",
+                            )}
                           >
-                            <div
-                              className={cn(
-                                "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                                isSelected
-                                  ? "bg-primary text-primary-foreground"
-                                  : "opacity-50 [&_svg]:invisible",
-                              )}
-                            >
-                              <CheckIcon className="h-3 w-3" />
-                            </div>
-                            <span className="flex-1">{category}</span>
-                            <span className="text-muted-foreground text-xs">
-                              {categoryCounts[category] || 0}
-                            </span>
-                          </CommandItem>
-                        );
-                      })}
+                            <CheckIcon className="h-3 w-3" />
+                          </div>
+                          <span className="flex-1">{category}</span>
+                          <span className="text-muted-foreground text-xs">
+                            {categoryCounts[category] || 0}
+                          </span>
+                        </CommandItem>
+                      ))}
                     </CommandGroup>
                   </CommandList>
                   {selectedCategories.length > 0 && (

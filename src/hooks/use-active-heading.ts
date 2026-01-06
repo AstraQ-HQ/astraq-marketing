@@ -21,19 +21,19 @@ export function useActiveHeading(headings: Blog["headings"]) {
       },
     );
 
+    const observedElements: Element[] = [];
+
     for (const heading of headings) {
       const element = document.getElementById(heading.slug);
       if (element) {
         observer.observe(element);
+        observedElements.push(element);
       }
     }
 
     return () => {
-      for (const heading of headings) {
-        const element = document.getElementById(heading.slug);
-        if (element) {
-          observer.unobserve(element);
-        }
+      for (const element of observedElements) {
+        observer.unobserve(element);
       }
     };
   }, [headings]);
