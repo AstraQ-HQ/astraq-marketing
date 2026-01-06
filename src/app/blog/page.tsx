@@ -1,25 +1,48 @@
 "use client";
 
 import { formatDate } from "date-fns";
-import { CalendarIcon, SearchIcon } from "lucide-react";
+import { CalendarIcon, CheckIcon, FilterIcon, SearchIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { BlogBannerImage } from "@/components/blog-banner-image";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { allBlogsByDate } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [filterOpen, setFilterOpen] = useState(false);
   const { ref, isVisible } = useIntersectionObserver();
 
   const categories = useMemo(() => {
     const uniqueCategories = new Set(
       allBlogsByDate.map((blog) => blog.category),
     );
-    return ["All", ...Array.from(uniqueCategories)];
+    return Array.from(uniqueCategories).sort();
+  }, []);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const blog of allBlogsByDate) {
+      counts[blog.category] = (counts[blog.category] || 0) + 1;
+    }
+    return counts;
   }, []);
 
   const filteredPosts = useMemo(() => {
@@ -28,15 +51,32 @@ export default function BlogPage() {
         blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.summary.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory =
-        activeCategory === "All" || blog.category === activeCategory;
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(blog.category);
       return matchesSearch && matchesCategory;
     });
-  }, [searchTerm, activeCategory]);
+  }, [searchTerm, selectedCategories]);
 
-  const featuredPost = activeCategory === "All" ? filteredPosts[0] : null;
+  const featuredPost = selectedCategories.length === 0 ? filteredPosts[0] : null;
   const otherPosts = featuredPost
     ? filteredPosts.filter((p) => p.slug !== featuredPost.slug)
     : filteredPosts;
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category],
+    );
+  };
+
+  const removeCategory = (category: string) => {
+    setSelectedCategories((prev) => prev.filter((c) => c !== category));
+  };
+
+  const clearAllCategories = () => {
+    setSelectedCategories([]);
+  };
 
   return (
     <>
@@ -53,36 +93,111 @@ export default function BlogPage() {
 
       <section className="py-8 px-4 sm:px-6 lg:px-8 border-b border-border">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-6 relative">
-            <SearchIcon
-              className="absolute left-3 top-3 text-muted-foreground"
-              size={20}
-              strokeWidth={1}
-            />
-            <input
-              type="text"
-              placeholder="Search posts..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:border-accent"
-            />
+          <div className="flex gap-3 items-center">
+            <div className="flex-1 relative">
+              <SearchIcon
+                className="absolute left-3 top-3 text-muted-foreground"
+                size={20}
+                strokeWidth={1}
+              />
+              <input
+                type="text"
+                placeholder="Search posts..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:border-accent"
+              />
+            </div>
+
+            <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className=
+                    "h-12 w-12 shrink-0 relative border-border!"
+                >
+                  <FilterIcon size={20} strokeWidth={1.5} />
+                  {selectedCategories.length > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-accent text-accent-foreground text-xs font-semibold flex items-center justify-center">
+                      {selectedCategories.length}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-72 p-0" align="end">
+                <Command>
+                  <CommandInput placeholder="Search categories..." />
+                  <CommandList>
+                    <CommandEmpty>No categories found.</CommandEmpty>
+                    <CommandGroup heading="Categories">
+                      {categories.map((category) => {
+                        const isSelected = selectedCategories.includes(category);
+                        return (
+                          <CommandItem
+                            key={category}
+                            value={category}
+                            onSelect={() => toggleCategory(category)}
+                            className="cursor-pointer"
+                          >
+                            <div
+                              className={cn(
+                                "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                                isSelected
+                                  ? "bg-primary text-primary-foreground"
+                                  : "opacity-50 [&_svg]:invisible",
+                              )}
+                            >
+                              <CheckIcon className="h-3 w-3" />
+                            </div>
+                            <span className="flex-1">{category}</span>
+                            <span className="text-muted-foreground text-xs">
+                              {categoryCounts[category] || 0}
+                            </span>
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                  {selectedCategories.length > 0 && (
+                    <div className="border-t p-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-muted-foreground hover:text-foreground"
+                        onClick={clearAllCategories}
+                      >
+                        Clear all filters
+                      </Button>
+                    </div>
+                  )}
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                variant={activeCategory === category ? "default" : "outline"}
-                className={cn(
-                  "px-4 py-2 rounded-sm font-semibold whitespace-nowrap",
-                  activeCategory === category ? "text-primary-foreground" : "",
-                )}
+          {selectedCategories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {selectedCategories.map((category) => (
+                <Badge
+                  key={category}
+                  variant="secondary"
+                  className="pl-3 pr-1.5 py-1.5 gap-1.5 cursor-pointer rounded-none border-border"
+                  onClick={() => removeCategory(category)}
+                >
+                  {category}
+                  <XIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                </Badge>
+              ))}
+              <button
+                type="button"
+                onClick={clearAllCategories}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors underline-offset-4 hover:underline"
               >
-                {category}
-              </Button>
-            ))}
-          </div>
+                Clear all
+              </button>
+            </div>
+          )}
         </div>
       </section>
 

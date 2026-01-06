@@ -34,7 +34,7 @@ Create a professional blog banner image (16:9 aspect ratio, 1200x675px recommend
 
 **BLOG DETAILS:**
 Title: {{title}}
-Summary: {summary}
+Summary: {{summary}}
 
 ---
 
