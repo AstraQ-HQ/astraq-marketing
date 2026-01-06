@@ -19,6 +19,8 @@ This treatise will bifurcate the analysis: first, examining the physics and proc
 
 ## Part I: The Piercing Gaze – Synthetic Aperture Radar (SAR)
 
+![Synthetic Aperture Radar imagery showing vessel detection](/images/blog/os2-vessel-detection/sar2.jpg)
+
 ### The Physics of Radar Backscatter
 
 To understand why we use SAR, one must appreciate the limitations of light. Optical sensors are passive; they rely on reflected solar energy. When the sun sets or the stratus clouds thicken, optical sensors are blinded. SAR, conversely, is an active sensor. It illuminates the Earth with microwave pulses and records the echo.
@@ -144,7 +146,7 @@ Sentinel-2 captures light across 13 spectral bands. For our **OS²** solution, w
 - **Near-Infrared (B08):** Provides extreme contrast between water (which absorbs NIR) and land or floating objects (which reflect it).
 - **Shortwave Infrared (SWIR - B11, B12):** These bands penetrate atmospheric haze better than visible light and are sensitive to moisture content, aiding in distinguishing metal from water.
 
-We perform **differential normalization**. The RGB bands, which have similar dynamic ranges, are normalized with one set of constants ($\sigma_{RGB}​=3000$), while the other bands, which often have higher reflectance values, use a different scaling factor ($\sigma_{other}=8160$). This preserves the relative spectral signatures that the model relies on for classification.
+We perform **differential normalization**. The RGB bands, which have similar dynamic ranges, are normalized with one set of constants ($\sigma_{RGB}=3000$), while the other bands, which often have higher reflectance values, use a different scaling factor ($\sigma_{other}=8160$). This preserves the relative spectral signatures that the model relies on for classification.
 
 ### The Architecture: Swin Transformer
 
@@ -166,22 +168,22 @@ This mechanism, mathematically represented as **SW-MSA** (Shifted Window Multi-H
 - **Stage 3:** 32×32 resolution.
 - **Stage 4:** 16×16 resolution (Semantic context) .
 
-This produces a hierarchy of feature maps ${C1​,C3​,C5​,C7​}$ similar to a ConvNet, which is essential for the next component: the Feature Pyramid Network.
+This produces a hierarchy of feature maps ${C1,C3,C5,C7}$ similar to a ConvNet, which is essential for the next component: the Feature Pyramid Network.
 
 ### Feature Pyramid Network (FPN) and Multi-Scale Detection
 
 To detect vessels of all sizes simultaneously, we employ a **Feature Pyramid Network (FPN)**. The FPN takes the hierarchical features from the Swin Transformer and fuses them via a top-down pathway with lateral connections.
 
-Mathematically, a higher-level feature map P5​ is upsampled (resized larger) and added element-wise to the lower-level map C3​ (after a 1×1 convolution to match channels).
+Mathematically, a higher-level feature map P5 is upsampled (resized larger) and added element-wise to the lower-level map C3 (after a 1×1 convolution to match channels).
 
-$$P3​=Conv_{1 \times 1}​(C3​)+Upsample(P5​)$$
+$$P3=Conv_{1 \times 1}(C3)+Upsample(P5)$$
 
-This creates a pyramid of features ${P1​,P3​,P5​,P7​}$ where every level is semantically strong _and_ spatially resolute.
+This creates a pyramid of features ${P1,P3,P5,P7}$ where every level is semantically strong _and_ spatially resolute.
 
 We attach a separate Faster R-CNN head to each level of this pyramid, with **anchor sizes tailored to the level**:
 
-- **P1​ (High Res):** Uses small anchors ($32$ pixels). Optimized for dinghies and small craft.
-- **P7​ (Low Res):** Uses massive anchors ($256$ pixels). Optimized for supertankers.
+- **P1 (High Res):** Uses small anchors ($32$ pixels). Optimized for dinghies and small craft.
+- **P7 (Low Res):** Uses massive anchors ($256$ pixels). Optimized for supertankers.
 
 This **scale-adaptive detection** strategy ensures that a supertanker doesn't overwhelm the detector looking for a fishing boat, and a fishing boat isn't lost in the receptive field of a detector looking for a carrier.
 
@@ -196,11 +198,11 @@ Using **Adaptive Average Pooling** to distill the feature map of a detected vess
 3.  **Heading:** This is a circular variable ($0\degree=360\degree$). Standard regression fails here (predicting $359 \degree$ when the truth is $1 \degree$ results in a huge error, though they are close). We solve this by regressing the heading into Cartesian components:
 
 $$
-    x=cos(\theta_{ENU}​ \cdot \frac{\pi}{180})
+    x=cos(\theta_{ENU} \cdot \frac{\pi}{180})
 $$
 
 $$
-    y=sin(\theta_{ENU} ​\cdot \frac{\pi}{180})
+    y=sin(\theta_{ENU} \cdot \frac{\pi}{180})
 $$
 
     This decomposition allows the network to learn orientation without the discontinuity of the angular wraparound.

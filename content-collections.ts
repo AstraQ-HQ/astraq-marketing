@@ -22,6 +22,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import type { ShikiTransformer } from "shiki";
 import { unified } from "unified";
+import { visit } from "unist-util-visit";
 import { z } from "zod";
 
 type Headings = {
@@ -125,6 +126,28 @@ const blogs = defineCollection({
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: "wrap" }],
         rehypeKatex,
+        () => (tree) => {
+          visit(tree, "element", (node) => {
+            if (node.tagName === "img" && node.properties) {
+              const src = node.properties.src;
+              if (typeof src === "string") {
+                const existingClass = node.properties.className;
+                const classes = Array.isArray(existingClass)
+                  ? [...existingClass]
+                  : existingClass
+                    ? [existingClass]
+                    : [];
+
+                if (src.includes("#dark-mode-only"))
+                  classes.push("hidden", "dark:block");
+                else if (src.includes("#light-mode-only"))
+                  classes.push("block", "dark:hidden");
+
+                node.properties.className = classes;
+              }
+            }
+          });
+        },
         [
           rehypeShiki,
           {
