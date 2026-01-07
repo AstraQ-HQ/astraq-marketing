@@ -1,0 +1,12 @@
+name: "Phoebe"
+tagline: "Grounded intelligence from your data"
+description: "Phoebe is a Retrieval-Augmented Generation (RAG) system designed for high factual accuracy and traceability. It combines semantic chunking, hybrid retrieval (dense, sparse, late interaction), and citation-aware generation to deliver reliable, hallucination-minimized answers from complex document corpora."
+features:
+  - "Hybrid semantic retrieval"
+  - "Evidence-grounded generation"
+  - "Multi-hop reasoning support"
+  - "Citation & source traceability"
+icon: "Database"
+category: "RAG"
+featured: true
+

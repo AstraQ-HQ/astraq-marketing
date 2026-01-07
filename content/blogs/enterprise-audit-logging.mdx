@@ -1,7 +1,7 @@
 ---
-title: "**Enterprise Audit Logging**: The Missing Piece of the *Control Plane*"
-summary: "Part 4: Implementing tamper-proof, asynchronous audit logging for ephemeral workloads using Go middleware and the Decorator pattern."
-publishedAt: 2026-01-06
+title: "**Enterprise Audit Logging and Real-Time Monitoring**: The Missing Piece of the *Control Plane*"
+summary: "Part 4: Implementing tamper-proof audit logging and real-time monitoring for ephemeral workloads using Go middleware, ClickHouse, and the Decorator pattern."
+publishedAt: 2025-11-17
 category: "System Design"
 draft: false
 series:
@@ -11,11 +11,11 @@ series:
 
 In the previous parts of this series, we built a robust engine for running untrusted AI agents. We have <EmbedBlog slug="polymorphic-workload-orchestrator" placeholder="Polymorphism" />, <EmbedBlog slug="secure-microvm-runtime" placeholder="Compute Isolation" />, and <EmbedBlog slug="secure-agent-networking" placeholder="Network Lockdown" />.
 
-But for an enterprise platform, running the workload safely isn't enough. You need to prove _what happened_.
+But for an enterprise platform, running the workload safely isn't enough. You need to prove _what happened_ and monitor _what's happening right now_.
 
-Ephemeral workloads present a unique "Black Box" problem: by the time an incident is reported, the Pod, the logs, and the VM are often already deleted.
+Ephemeral workloads present a unique "Black Box" problem: by the time an incident is reported, the Pod, the logs, and the VM are often already deleted. You also need real-time visibility into workload health, resource usage, and security anomalies.
 
-In this part, we will implement an **Enterprise Audit Logging** system. We'll use the **Decorator Pattern** to add transparent logging to our `WorkloadRuntime` without touching our core business logic.
+In this part, we will implement a unified **Audit Logging and Monitoring** system using ClickHouse. We'll use the **Decorator Pattern** to add transparent logging and metrics collection to our `WorkloadRuntime` without touching our core business logic. The same system that stores audit logs will power real-time dashboards and security alerting.
 
 ## The Middleware Pattern
 
@@ -44,17 +44,26 @@ func (a *AuditMiddleware) Provision(ctx context.Context, id string, spec runtime
     // 1. Call the underlying provider (Firecracker/K8s)
     err := a.Next.Provision(ctx, id, spec)
 
-    // 2. Record the event asynchronously
+    // 2. Collect metrics during execution
     duration := time.Since(start)
+    metrics := a.collectMetrics(ctx, id) // We'll implement this
 
     entry := AuditEntry{
-        EventID:      uuid.New().String(),
-        WorkloadID:   id,
-        Action:       "PROVISION",
-        Status:       "SUCCESS",
-        DurationMs:   duration.Milliseconds(),
-        SpecSnapshot: spec, // Save exactly what was requested
-        Timestamp:    time.Now().UTC(),
+        EventID:         uuid.New().String(),
+        WorkloadID:      id,
+        Action:          "PROVISION",
+        Status:          "SUCCESS",
+        DurationMs:      duration.Milliseconds(),
+        SpecSnapshot:    spec, // Save exactly what was requested
+        Timestamp:       time.Now().UTC(),
+        CPUUsagePercent: metrics.CPUPercent,
+        MemoryUsageMB:   metrics.MemoryMB,
+        NetworkBytesIn:  metrics.NetworkIn,
+        NetworkBytesOut: metrics.NetworkOut,
+        TenantID:        spec.Metadata["tenant_id"],
+        WorkloadType:    spec.Type,
+        ImageName:       spec.Image,
+        CostEstimateUSD: a.calculateCost(duration, metrics),
     }
 
     if err != nil {
@@ -66,6 +75,18 @@ func (a *AuditMiddleware) Provision(ctx context.Context, id string, spec runtime
     go a.Sink.Write(entry)
 
     return err
+}
+
+// collectMetrics queries Kubernetes API for resource usage
+func (a *AuditMiddleware) collectMetrics(ctx context.Context, workloadID string) ResourceMetrics {
+    // Query K8s metrics API or cAdvisor before teardown
+    // This is a simplified version - in production, you'd query the Metrics API
+    return ResourceMetrics{
+        CPUPercent:  45.2,
+        MemoryMB:     512,
+        NetworkIn:    1024 * 1024,  // 1 MB
+        NetworkOut:   2048 * 1024,  // 2 MB
+    }
 }
 ```
 
@@ -87,9 +108,9 @@ graph LR
     end
 ```
 
-## The Schema: What to Log?
+## The Schema: What to Log and Monitor?
 
-Standard application logs ("text") are useless for analysis. We need **Structured Events**.
+Standard application logs ("text") are useless for analysis. We need **Structured Events** that serve dual purposes: audit trails and real-time monitoring.
 
 ```go
 type AuditEntry struct {
@@ -103,10 +124,24 @@ type AuditEntry struct {
     // Critical for security forensics:
     SpecSnapshot runtime.Spec           `json:"spec_snapshot"`
     Metadata     map[string]string      `json:"metadata"`
+
+    // Resource metrics for monitoring:
+    CPUUsagePercent    float64          `json:"cpu_usage_percent"`    // Average CPU during execution
+    MemoryUsageMB      int64            `json:"memory_usage_mb"`      // Peak memory usage
+    NetworkBytesIn     int64            `json:"network_bytes_in"`      // Total bytes received
+    NetworkBytesOut    int64            `json:"network_bytes_out"`    // Total bytes sent
+    DiskIOReadMB       int64            `json:"disk_io_read_mb"`      // Disk reads
+    DiskIOWriteMB      int64            `json:"disk_io_write_mb"`      // Disk writes
+
+    // Business metrics:
+    TenantID           string            `json:"tenant_id"`             // For multi-tenant tracking
+    WorkloadType       string            `json:"workload_type"`         // "trusted" or "untrusted"
+    ImageName          string            `json:"image_name"`            // Container image
+    CostEstimateUSD    float64           `json:"cost_estimate_usd"`     // Estimated cost
 }
 ```
 
-By storing the `SpecSnapshot`, we have a tamper-proof record of exactly what environment variables and image query parameters were requested at that moment in time.
+By storing the `SpecSnapshot`, we have a tamper-proof record of exactly what environment variables and image query parameters were requested. By including resource metrics, we can monitor workload health and detect anomalies in real-time.
 
 ## Asynchronous Sinks
 
@@ -160,9 +195,9 @@ func (k *KafkaSink) Write(e AuditEntry) {
 }
 ```
 
-### Destination Example: ClickHouse
+### Destination: ClickHouse for Unified Audit + Monitoring
 
-You could pipe these logs effectively into **BigQuery**, **Snowflake**, or **Datadog**. For this example, we'll use **ClickHouse** because its Kafka Engine allows for direct ingestion without a separate consumer service.
+We'll use **ClickHouse** because it excels at both high-volume log ingestion and real-time analytical queries. Its Kafka Engine allows direct ingestion without a separate consumer service, and its columnar storage makes it perfect for time-series metrics.
 
 ```sql
 -- 1. Create the destination table (where data lives)
@@ -175,9 +210,24 @@ CREATE TABLE workload_audit
     duration_ms Int64,
     timestamp DateTime,
     spec_snapshot String, -- JSON
-    metadata Map(String, String)
+    metadata Map(String, String),
+
+    -- Resource metrics
+    cpu_usage_percent Float64,
+    memory_usage_mb Int64,
+    network_bytes_in Int64,
+    network_bytes_out Int64,
+    disk_io_read_mb Int64,
+    disk_io_write_mb Int64,
+
+    -- Business metrics
+    tenant_id String,
+    workload_type LowCardinality(String),
+    image_name String,
+    cost_estimate_usd Float64
 ) ENGINE = MergeTree()
-ORDER BY (workload_id, timestamp);
+ORDER BY (timestamp, workload_id)
+PARTITION BY toYYYYMM(timestamp);
 
 -- 2. Create the Kafka stream table
 CREATE TABLE workload_audit_queue
@@ -189,7 +239,17 @@ CREATE TABLE workload_audit_queue
     duration_ms Int64,
     timestamp DateTime,
     spec_snapshot String,
-    metadata Map(String, String)
+    metadata Map(String, String),
+    cpu_usage_percent Float64,
+    memory_usage_mb Int64,
+    network_bytes_in Int64,
+    network_bytes_out Int64,
+    disk_io_read_mb Int64,
+    disk_io_write_mb Int64,
+    tenant_id String,
+    workload_type String,
+    image_name String,
+    cost_estimate_usd Float64
 ) ENGINE = Kafka
 SETTINGS kafka_broker_list = 'kafka:9092',
          kafka_topic_list = 'audit-logs',
@@ -201,9 +261,160 @@ CREATE MATERIALIZED VIEW workload_audit_mv TO workload_audit AS
 SELECT * FROM workload_audit_queue;
 ```
 
-Now, your data is instantly queryable via SQL:
+Now, your data is instantly queryable via SQL for both audit and monitoring:
 
 > _"Show me all agents that used the 'finance-scraper' image in the last 30 days and failed within 5 seconds."_
+
+> _"What's the average CPU usage across all workloads in the last hour?"_
+
+## Real-Time Monitoring with Materialized Views
+
+ClickHouse materialized views let us pre-aggregate metrics for real-time dashboards:
+
+```sql
+-- Aggregated metrics per minute
+CREATE MATERIALIZED VIEW workload_metrics_minute
+ENGINE = SummingMergeTree()
+ORDER BY (timestamp, tenant_id, workload_type)
+AS SELECT
+    toStartOfMinute(timestamp) as timestamp,
+    tenant_id,
+    workload_type,
+    count() as workload_count,
+    sum(duration_ms) as total_duration_ms,
+    avg(duration_ms) as avg_duration_ms,
+    sum(cpu_usage_percent) as total_cpu_percent,
+    avg(cpu_usage_percent) as avg_cpu_percent,
+    sum(memory_usage_mb) as total_memory_mb,
+    sum(cost_estimate_usd) as total_cost_usd,
+    countIf(status = 'FAILURE') as failure_count
+FROM workload_audit
+GROUP BY timestamp, tenant_id, workload_type;
+
+-- Per-tenant resource usage (for quota tracking)
+CREATE MATERIALIZED VIEW tenant_resource_usage
+ENGINE = ReplacingMergeTree()
+ORDER BY (tenant_id, toStartOfHour(timestamp))
+AS SELECT
+    tenant_id,
+    toStartOfHour(timestamp) as hour,
+    sum(cpu_usage_percent * duration_ms / 1000) as cpu_seconds,
+    sum(memory_usage_mb * duration_ms / 1000) as memory_mb_seconds,
+    sum(cost_estimate_usd) as total_cost_usd,
+    count() as workload_count
+FROM workload_audit
+WHERE timestamp >= now() - INTERVAL 24 HOUR
+GROUP BY tenant_id, hour;
+```
+
+## Security Alerting Queries
+
+Use ClickHouse queries to detect anomalies in real-time:
+
+```sql
+-- Detect potential crypto miners (workloads running 5x longer than average)
+SELECT
+    workload_id,
+    image_name,
+    duration_ms,
+    cpu_usage_percent,
+    timestamp
+FROM workload_audit
+WHERE timestamp >= now() - INTERVAL 1 HOUR
+  AND duration_ms > (
+      SELECT avg(duration_ms) * 5
+      FROM workload_audit
+      WHERE timestamp >= now() - INTERVAL 24 HOUR
+        AND workload_type = workload_audit.workload_type
+  )
+ORDER BY duration_ms DESC
+LIMIT 10;
+
+-- Detect suspicious images (not in trusted list)
+SELECT
+    workload_id,
+    image_name,
+    tenant_id,
+    timestamp
+FROM workload_audit
+WHERE timestamp >= now() - INTERVAL 1 HOUR
+  AND image_name NOT IN (
+      'trusted-image-1',
+      'trusted-image-2',
+      'trusted-image-3'
+  );
+
+-- Detect resource exhaustion attacks
+SELECT
+    tenant_id,
+    sum(cpu_usage_percent * duration_ms / 1000) as total_cpu_seconds,
+    sum(memory_usage_mb * duration_ms / 1000) as total_memory_mb_seconds,
+    count() as workload_count
+FROM workload_audit
+WHERE timestamp >= now() - INTERVAL 1 HOUR
+GROUP BY tenant_id
+HAVING total_cpu_seconds > 3600  -- More than 1 CPU-hour in the last hour
+ORDER BY total_cpu_seconds DESC;
+```
+
+## Grafana Integration
+
+Connect Grafana to ClickHouse for real-time dashboards:
+
+```yaml
+# grafana-datasource.yaml
+apiVersion: 1
+datasources:
+  - name: ClickHouse
+    type: grafana-clickhouse-datasource
+    access: proxy
+    url: http://clickhouse:8123
+    jsonData:
+      defaultDatabase: default
+      port: 8123
+      server: clickhouse
+      username: default
+```
+
+Example dashboard queries:
+
+**Control Plane Health:**
+
+```sql
+-- Queue depth over time
+SELECT
+    toStartOfMinute(timestamp) as time,
+    count() as workloads_provisioned
+FROM workload_audit
+WHERE timestamp >= now() - INTERVAL 1 HOUR
+GROUP BY time
+ORDER BY time;
+```
+
+**Workload Performance:**
+
+```sql
+-- P95 latency by workload type
+SELECT
+    workload_type,
+    quantile(0.95)(duration_ms) as p95_latency_ms,
+    avg(duration_ms) as avg_latency_ms
+FROM workload_audit
+WHERE timestamp >= now() - INTERVAL 1 HOUR
+GROUP BY workload_type;
+```
+
+**Security Overview:**
+
+```sql
+-- Anomalies detected in last hour
+SELECT
+    countIf(duration_ms > avg_duration_ms * 5) as crypto_miner_suspicious,
+    countIf(image_name NOT IN ('trusted-list')) as untrusted_images,
+    countIf(cpu_usage_percent > 90) as high_cpu_workloads
+FROM workload_audit
+WHERE timestamp >= now() - INTERVAL 1 HOUR;
+```
 
 ## Usage in the Worker
 
@@ -229,14 +440,28 @@ func (w *Worker) Start(ctx context.Context) {
 }
 ```
 
-## Bonus: Anomaly Detection
+## Automated Alerting
 
-Once your logs are structured and centralized, you can move from **passive viewing** to **active defense**.
+Set up automated alerts using ClickHouse queries or integrate with AlertManager:
 
-By feeding these logs into a system that tracks "Baseline Duration" and "Baseline Resource Usage", you can auto-flag suspicious agents.
+```go
+// Example: Run security queries periodically
+func (a *AuditMiddleware) checkAnomalies(ctx context.Context) {
+    // Query ClickHouse for suspicious workloads
+    query := `
+        SELECT workload_id, image_name, duration_ms
+        FROM workload_audit
+        WHERE timestamp >= now() - INTERVAL 1 HOUR
+          AND duration_ms > (SELECT avg(duration_ms) * 5 FROM workload_audit)
+    `
 
-- **Rule:** If `Duration > 500% of Avg` -> Flag for review (Crypto miner?)
-- **Rule:** If `Image != TrustedList` -> Alert Security Team
+    results := a.clickhouseClient.Query(query)
+    if len(results) > 0 {
+        // Send alert to Slack/PagerDuty
+        a.alertService.Send("Suspicious workloads detected", results)
+    }
+}
+```
 
 ## Conclusion
 
@@ -245,6 +470,9 @@ We have built a platform that is:
 1.  **Polymorphic:** Runs Pods and VMs.
 2.  **Secure:** Hardened kernel and network isolation.
 3.  **Auditable:** Every action is recorded and queryable.
+4.  **Observable:** Real-time monitoring and alerting from the same data store.
+
+By using ClickHouse for both audit logs and metrics, we've created a unified observability system. The same events that provide compliance audit trails also power real-time dashboards and security alerting—no redundant infrastructure, no data silos.
 
 This is the difference between a "script" and a "platform."
 

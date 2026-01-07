@@ -3,8 +3,13 @@ import {
   BookOpenIcon,
   BrainIcon,
   CheckCircleIcon,
+  ClipboardCheckIcon,
+  BookSearchIcon,
+  GraduationCapIcon,
   type LucideIcon,
+  ShieldCheckIcon,
   ShieldIcon,
+  ShipIcon,
   UsersIcon,
   ZapIcon,
 } from "lucide-react";
@@ -17,6 +22,11 @@ const iconMap: Record<string, LucideIcon> = {
   BrainIcon,
   ZapIcon,
   CheckCircleIcon,
+  GraduationCapIcon,
+  ClipboardCheckIcon,
+  ShieldCheckIcon,
+  BookSearchIcon,
+  ShipIcon,
 };
 
 export function Icon({

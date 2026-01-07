@@ -1,0 +1,12 @@
+name: "Metis"
+tagline: "See through deception"
+description: "Metis is an AI-driven phishing detection platform that analyzes URLs, content, visuals, and user behavior to identify zero-day and brand-mimicking phishing attacks. It operates across email, web, and mobile channels with real-time intelligence and adaptive risk scoring."
+features:
+  - "AI-powered phishing detection"
+  - "Visual & brand impersonation analysis"
+  - "Zero-day attack identification"
+  - "Cross-platform protection"
+icon: "ShieldAlert"
+category: "Phishing"
+featured: true
+

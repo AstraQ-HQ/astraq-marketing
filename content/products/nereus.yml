@@ -1,0 +1,12 @@
+name: "Nereus"
+tagline: "Data that defends the deep"
+description: "Nereus is a Maritime Domain Awareness system that fuses satellite imagery (EO & SAR) with AIS data to detect, identify, and track vessels at sea. It performs automated ship detection, AIS correlation, and trajectory interpolation to reveal dark vessels, anomalous behavior, and maritime threats."
+features:
+  - "EO & SAR satellite vessel detection"
+  - "AIS correlation & identity matching"
+  - "Trajectory interpolation & tracking"
+  - "Anomaly & dark vessel detection"
+icon: "Ship"
+category: "Maritime Intelligence"
+featured: true
+

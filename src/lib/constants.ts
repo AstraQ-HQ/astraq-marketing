@@ -28,6 +28,8 @@ type NavItem = {
   href: Route;
 };
 
+export const calLink = "https://cal.com/astraqcd" as Route
+
 export const siteConfig = {
   name: "AstraQ",
   description: "AI-powered cybersecurity for modern enterprises",
@@ -41,7 +43,7 @@ export const siteConfig = {
     ] satisfies NavItem[],
     cta: {
       text: "Book Demo",
-      href: "https://cal.com/astraq-cyber-defence" as Route,
+      href: calLink,
     },
   },
   pages: {
@@ -54,7 +56,7 @@ export const siteConfig = {
           primary: { text: "Explore Solutions", href: "/products" as Route },
           secondary: {
             text: "Book Demo",
-            href: "https://cal.com/astraq-cyber-defence" as Route,
+            href: calLink,
           },
         },
         tags: ["Enterprise Grade", "Lightning Fast", "Always Secure"],
@@ -78,31 +80,39 @@ export const siteConfig = {
       whyAstraQ: {
         title: "Why AstraQ?",
         description:
-          "Trusted by enterprises worldwide for unmatched security and innovation",
+          "Building next-generation security systems for tomorrow's threats",
         stats: [
           {
-            icon: TrendingUpIcon,
-            value: "99.9%",
-            label: "Threat Detection Rate",
+            icon: CloudIcon,
+            value: "4 Core Platforms",
+            label: "Under Active Development",
           },
-          { icon: ClockIcon, value: "<5min", label: "Response Time" },
-          { icon: AwardIcon, value: "500+", label: "Enterprise Clients" },
+          {
+            icon: TrendingUpIcon,
+            value: "10+ Specialists",
+            label: "Security & AI Team",
+          },
+          {
+            icon: AwardIcon,
+            value: "2 Challenge Wins",
+            label: "C-DoT, NCIIPC Grand AI",
+          },
         ],
         features: [
           {
             title: "Innovation First",
             description:
-              "Cutting-edge AI and machine learning technologies at the forefront of cybersecurity.",
+              "We design security solutions from the ground up using AI, satellite intelligence, and modern system architectures focused on solving real, emerging security problems rather than legacy checklists.",
           },
           {
-            title: "Enterprise Proven",
+            title: "Built for Enterprise Scale",
             description:
-              "Trusted by Fortune 500 companies and government agencies for mission-critical protection.",
+              "Our platforms are engineered with scalability, auditability, and compliance in mind, ensuring readiness for enterprise and government deployment as we move from pilots to production.",
           },
           {
-            title: "Expert Support",
+            title: "Expert-Led Development",
             description:
-              "24/7 expert support team dedicated to your security and success.",
+              "Developed by a team with hands-on experience in cybersecurity, AI research, OSINT, and critical infrastructure protection combining academic rigor with real-world threat understanding.",
           },
         ],
       },
@@ -145,7 +155,7 @@ export const siteConfig = {
     services: {
       cta: {
         text: "Schedule Consultation",
-        href: "https://cal.com/astraq-cyber-defence" as Route,
+        href: calLink,
       },
     },
   },

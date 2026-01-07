@@ -1,0 +1,5 @@
+name: "AI & RAG Knowledge Systems"
+description: "Custom Retrieval-Augmented Generation solutions using Phoebe to enable secure, accurate, and auditable knowledge retrieval across enterprise documents and sensitive datasets."
+icon: "BookSearchIcon"
+featured: true
+

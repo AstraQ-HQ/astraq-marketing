@@ -1,0 +1,12 @@
+name: "Athena"
+tagline: "Train like the adversary thinks"
+description: "Athena is an intelligent CTF and cyber training platform that simulates real-world attack scenarios. It blends automated challenge generation, adaptive difficulty, and behavioral analytics to evaluate and enhance offensive and defensive cybersecurity skills."
+features:
+  - "Real-world attack simulations"
+  - "Adaptive challenge difficulty"
+  - "Blue & red team scenarios"
+  - "Skill analytics and scoring"
+icon: "Target"
+category: "CTF"
+featured: true
+
