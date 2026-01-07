@@ -1,6 +1,6 @@
 ---
 title: "**Zero-Trust Networking** for *AI Agents*: Protecting Your Internal VPC"
-summary: "Part 3: Preventing SSRF and lateral movement by dynamically provisioning Kubernetes Network Policies for untrusted workloads."
+summary: "Preventing SSRF and lateral movement by dynamically provisioning Kubernetes Network Policies for untrusted workloads."
 publishedAt: 2025-11-13
 category: "Security"
 draft: false
@@ -15,7 +15,7 @@ But computation is only half the battle. AI agents are useful because they _conn
 
 However, giving an untrusted agent unrestricted network access is a massive security risk. **Server-Side Request Forgery (SSRF)** is the #1 threat here. If an agent can curl your minimal Metadata Service (`169.254.169.254`) or ping your internal database, your isolation is broken.
 
-In this post (Part 3), we'll upgrade our Go Control Plane to automatically provision **Zero-Trust Network Policies**.
+In this post, we'll upgrade our Go Control Plane to automatically provision **Zero-Trust Network Policies**.
 
 ## The Goal: "Default Deny"
 
@@ -169,10 +169,3 @@ We have now built a "Fort Knox" for AI agents:
 3.  **Control:** Orchestrated via a unified Go interface (Part 1).
 
 This architecture allows you to sleep at night while thousands of user-defined agents crawl the web and execute code on your platform.
-
-### Read the Series
-
-- <EmbedBlog slug="polymorphic-workload-orchestrator" /> (The Foundation)
-- <EmbedBlog slug="secure-microvm-runtime" /> (The Compute)
-- **Zero-Trust Networking** (The Network)
-- <EmbedBlog slug="enterprise-audit-logging" /> (The Audit Trail)

@@ -61,18 +61,19 @@ export const siteConfig = {
         tags: ["Enterprise Grade", "Lightning Fast", "Always Secure"],
       },
       backedBy: {
-        title: "Backed by",
-        description: "Trusted within India’s defence innovation ecosystem.",
+        title: "Backed by: ",
         backers: [
           {
-            id: 1,
             name: "C-DOT",
-            logo: { url: "/images/cdot.png" },
+            logo: "/images/cdot.png",
           },
           {
-            id: 2,
             name: "STPI",
-            logo: { url: "/images/stpi.png" },
+            logo: "/images/stpi.png",
+          },
+          {
+            name: "Startup India",
+            logo: "/images/startup-india.png",
           },
         ],
       },

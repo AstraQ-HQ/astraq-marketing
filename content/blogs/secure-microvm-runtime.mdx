@@ -1,6 +1,6 @@
 ---
 title: "*Hardening* the **Control Plane**: From Pods to *MicroVMs*"
-summary: "Part 2: Securing your workload orchestrator by swapping standard Containers for Firecracker MicroVMs using Kata Containers and the Go WorkloadRuntime interface."
+summary: "Securing your workload orchestrator by swapping standard Containers for Firecracker MicroVMs using Kata Containers and the Go WorkloadRuntime interface."
 publishedAt: 2025-11-09
 category: "System Design"
 draft: false
@@ -183,10 +183,3 @@ We now have a system that is:
 3.  **Secure:** Uses hardware virtualization for untrusted agents.
 
 In <EmbedBlog slug="secure-agent-networking" placeholder="Part 3" />, we'll look at **Networking**. How do we let these agents talk to the internet (or specific internal APIs) without letting them scan our internal VPC?
-
-### Read the Series
-
-- <EmbedBlog slug="polymorphic-workload-orchestrator" /> (The Foundation)
-- **Secure MicroVM Runtime** (The Compute)
-- <EmbedBlog slug="secure-agent-networking" /> (The Network)
-- <EmbedBlog slug="enterprise-audit-logging" /> (The Audit Trail)

@@ -1,6 +1,6 @@
 ---
-title: "**Enterprise Audit Logging and Real-Time Monitoring**: The Missing Piece of the *Control Plane*"
-summary: "Part 4: Implementing tamper-proof audit logging and real-time monitoring for ephemeral workloads using Go middleware, ClickHouse, and the Decorator pattern."
+title: "**Enterprise Audit Logging and Monitoring**: The Missing Piece of the *Control Plane*"
+summary: "Implementing tamper-proof audit logging and real-time monitoring for ephemeral workloads using Go middleware, ClickHouse, and the Decorator pattern."
 publishedAt: 2025-11-17
 category: "System Design"
 draft: false
@@ -19,7 +19,7 @@ In this part, we will implement a unified **Audit Logging and Monitoring** syste
 
 ## The Middleware Pattern
 
-One of the huge benefits of defining our `WorkloadRuntime` as a Go interface (in Part 1) is that we can wrap it.
+One of the huge benefits of defining our `WorkloadRuntime` as a Go interface is that we can wrap it.
 
 We don't need to obscure our `FirecrackerRuntime` code with `log.Printf` calls. We can create a dedicated `AuditMiddleware`.
 
@@ -475,10 +475,3 @@ We have built a platform that is:
 By using ClickHouse for both audit logs and metrics, we've created a unified observability system. The same events that provide compliance audit trails also power real-time dashboards and security alerting—no redundant infrastructure, no data silos.
 
 This is the difference between a "script" and a "platform."
-
-### Read the Series
-
-- <EmbedBlog slug="polymorphic-workload-orchestrator" />
-- <EmbedBlog slug="secure-microvm-runtime" />
-- <EmbedBlog slug="secure-agent-networking" />
-- **Enterprise Audit Logging**

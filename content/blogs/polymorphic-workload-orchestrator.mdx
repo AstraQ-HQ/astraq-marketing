@@ -11,7 +11,7 @@ series:
 
 In the era of AI agents and on-demand data processing, static infrastructure doesn't cut it. You might need to spin up a secure sandbox for a user's code one second, and a heavy data aggregation job the next. Standard Kubernetes Deployments are great for long-running services, but they struggle with the dynamic, ephemeral nature of these "per-request" workloads.
 
-In this guide (Part 1 of a series), we'll build a **Polymorphic Workload Orchestrator** in Go. This control plane will allow us to dynamically spawn, manage, and scale down isolated execution environments—whether they are standard Kubernetes Pods or secure MicroVMs—using a unified interface.
+In this guide, we'll build a **Polymorphic Workload Orchestrator** in Go. This control plane will allow us to dynamically spawn, manage, and scale down isolated execution environments—whether they are standard Kubernetes Pods or secure MicroVMs—using a unified interface.
 
 ## The Problem: "One Size Fits None"
 
@@ -290,10 +290,3 @@ We've built a robust foundation. Our Application Layer is decoupled from the Inf
 But what about those _untrusted_ AI agents? Running `rm -rf /` in a container is still dangerous.
 
 In <EmbedBlog slug="secure-microvm-runtime" placeholder="Part 2" />, we will implement the `FirecrackerRuntime` struct. We'll show how to use the exact same interface to spin up micro-VMs that offer hardware-level isolation for hostile workloads, without changing a single line of our API code.
-
-### Read the Series
-
-- **Polymorphic Workload Orchestrator** (The Foundation)
-- <EmbedBlog slug="secure-microvm-runtime" /> (The Compute)
-- <EmbedBlog slug="secure-agent-networking" /> (The Network)
-- <EmbedBlog slug="enterprise-audit-logging" /> (The Audit Trail)

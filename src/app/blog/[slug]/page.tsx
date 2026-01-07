@@ -12,12 +12,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { allBlogsByDate } from "@/lib/content";
+import { allBlogsByDate, getSeriesParts } from "@/lib/content";
 import { Mdx } from "./_components/mdx";
 import {
   DesktopTableOfContents,
   MobileTableOfContents,
 } from "./_components/toc";
+import { SeriesList } from "./_components/series-list";
 import "@/styles/mdx.css";
 import "@/styles/shiki.css";
 import "katex/dist/katex.min.css";
@@ -85,6 +86,8 @@ export default async function Page({ params }: PageProps<"/blog/[slug]">) {
 
   const path = `/blog/${blog.slug}`;
 
+  const seriesParts = getSeriesParts(blog);
+
   return (
     <div className="pt-20 md:pt-40">
       <article className="container-custom px-4 section-spacing relative">
@@ -97,7 +100,7 @@ export default async function Page({ params }: PageProps<"/blog/[slug]">) {
                 {blog.readingTime}
               </div>
               <h1
-                className="mb-6 font-mono text-4xl md:text-5xl lg:text-5xl"
+                className="mb-6 font-mono text-3xl lg:text-4xl"
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: This is trusted content from our CMS
                 dangerouslySetInnerHTML={{ __html: blog.htmlTitle }}
               />
@@ -156,12 +159,18 @@ export default async function Page({ params }: PageProps<"/blog/[slug]">) {
 
           <div className="grid grid-cols-1 md:grid-cols-[1fr_250px] relative gap-8">
             <div className="prose prose-lg min-w-0">
+              {blog.series && seriesParts.length > 0 && (
+                <SeriesList
+                  seriesName={blog.series.name}
+                  parts={seriesParts}
+                  currentPart={blog.series.part}
+                />
+              )}
               <Mdx code={blog.html} />
             </div>
             <DesktopTableOfContents headings={blog.headings} />
           </div>
 
-          {/* Series Navigation */}
           {blog.series && (blog.series.previous || blog.series.next) && (
             <div className="mt-16 pt-8 border-t border-border">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
