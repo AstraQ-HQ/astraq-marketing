@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import type { Route } from "next";
 import { z } from "zod";
+import { allProducts, allServices } from "@/lib/content";
 
 export const CONTACT_EMAIL = "contact@astraqcyberdefence.com";
 export const ADMIN_EMAILS = [""];
@@ -160,18 +161,14 @@ export const siteConfig = {
     },
   },
   footer: {
-    products: [
-      { label: "AI Threat Detection", href: "/products" },
-      { label: "Security Operations Center", href: "/products" },
-      { label: "Penetration Testing", href: "/products" },
-      { label: "Compliance Management", href: "/products" },
-    ] as NavItem[],
-    services: [
-      { label: "Security Consulting", href: "/services" },
-      { label: "Incident Response", href: "/services" },
-      { label: "Security Training", href: "/services" },
-      { label: "Managed Security", href: "/services" },
-    ] as NavItem[],
+    products: allProducts.map(({ name }) => ({
+      label: name,
+      href: "/products" as Route,
+    })),
+    services: allServices.map(({ name }) => ({
+      label: name,
+      href: "/services" as Route,
+    })),
     resources: [
       { label: "Blog", href: "/blog" },
       { label: "Open Source", href: "https://github.com/Astraq-HQ" },

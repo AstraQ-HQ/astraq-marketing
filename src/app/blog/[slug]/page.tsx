@@ -14,11 +14,11 @@ import {
 } from "@/components/ui/popover";
 import { allBlogsByDate, getSeriesParts } from "@/lib/content";
 import { Mdx } from "./_components/mdx";
+import { SeriesList } from "./_components/series-list";
 import {
   DesktopTableOfContents,
   MobileTableOfContents,
 } from "./_components/toc";
-import { SeriesList } from "./_components/series-list";
 import "@/styles/mdx.css";
 import "@/styles/shiki.css";
 import "katex/dist/katex.min.css";

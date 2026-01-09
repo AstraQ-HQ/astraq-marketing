@@ -1,3 +1,4 @@
+import type { LucideIcon } from "lucide-react";
 import {
   AlertCircleIcon,
   BookOpenIcon,
@@ -6,7 +7,6 @@ import {
   CheckCircleIcon,
   ClipboardCheckIcon,
   GraduationCapIcon,
-  type LucideIcon,
   ShieldCheckIcon,
   ShieldIcon,
   ShipIcon,
@@ -38,6 +38,6 @@ export function Icon({
   className?: string;
   strokeWidth?: number;
 }) {
-  const IconComponent = iconMap[name] || ShieldIcon; // Fallback to ShieldIcon
+  const IconComponent = iconMap[name] || ShieldIcon;
   return <IconComponent className={className} strokeWidth={strokeWidth} />;
 }

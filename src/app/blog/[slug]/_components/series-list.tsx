@@ -11,11 +11,17 @@ type SeriesListProps = {
   currentPart: number;
 };
 
-export function SeriesList({ seriesName, parts, currentPart }: SeriesListProps) {
+export function SeriesList({
+  seriesName,
+  parts,
+  currentPart,
+}: SeriesListProps) {
   return (
     <div className="my-4 p-4 border border-border rounded-lg bg-muted/30">
       <div className="mb-2">
-        <h3 className="font-mono text-base font-semibold mb-1">Series: {seriesName}</h3>
+        <h3 className="font-mono text-base font-semibold mb-1">
+          Series: {seriesName}
+        </h3>
       </div>
       <ol className="space-y-1 max-h-80 overflow-y-auto">
         {parts.map((part) => {
