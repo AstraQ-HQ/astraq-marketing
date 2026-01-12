@@ -45,7 +45,7 @@ export function FileTree({ tree, defaultOpen = false }: FileTreeProps) {
   const sortedTree = sortTree(tree);
 
   return (
-    <div className="mt-6 font-mono flex w-full flex-col rounded-lg bg-muted/50 text-muted-foreground">
+    <div className="mt-6 font-mono flex w-full flex-col rounded-lg bg-accent/30 text-accent-foreground">
       <div className="flex flex-1 flex-col gap-2 overflow-auto p-2">
         <div className="relative flex w-full min-w-0 flex-col p-2">
           <div className="w-full text-sm">

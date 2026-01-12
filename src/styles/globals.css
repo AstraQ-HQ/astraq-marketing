@@ -153,4 +153,26 @@
       transform: translateY(0);
     }
   }
+
+  .animate-rotate-scale {
+    animation: rotateScale 60s linear infinite;
+  }
+
+  @keyframes rotateScale {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    25% {
+      transform: rotate(90deg) scale(1.1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.2);
+    }
+    75% {
+      transform: rotate(270deg) scale(1.1);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
 }

@@ -16,6 +16,7 @@ export function HeroSection() {
           "mask-[radial-gradient(300px_circle_at_center,white,transparent)]",
           "md:mask-[radial-gradient(500px_circle_at_center,white,transparent)]",
           "lg:mask-[radial-gradient(700px_circle_at_center,white,transparent)]",
+          "animate-rotate-scale",
         )}
       />
       <div className="relative max-w-6xl mx-auto z-10 w-full px-4 sm:px-6 lg:px-8">
