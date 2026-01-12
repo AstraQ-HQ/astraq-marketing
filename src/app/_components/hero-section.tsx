@@ -13,7 +13,9 @@ export function HeroSection() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       <DotPattern
         className={cn(
-          "mask-[radial-gradient(700px_circle_at_center,white,transparent)]",
+          "mask-[radial-gradient(300px_circle_at_center,white,transparent)]",
+          "md:mask-[radial-gradient(500px_circle_at_center,white,transparent)]",
+          "lg:mask-[radial-gradient(700px_circle_at_center,white,transparent)]",
         )}
       />
       <div className="relative max-w-6xl mx-auto z-10 w-full px-4 sm:px-6 lg:px-8">

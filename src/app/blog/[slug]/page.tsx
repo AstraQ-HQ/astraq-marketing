@@ -26,6 +26,7 @@ import logo from "@/app/icon.svg";
 import { BlogBannerImage } from "@/components/blog-banner-image";
 import { env } from "@/env";
 import { siteConfig } from "@/lib/constants";
+import { ScrollProgress } from "./_components/scroll-progress";
 
 export async function generateMetadata({
   params,
@@ -89,7 +90,8 @@ export default async function Page({ params }: PageProps<"/blog/[slug]">) {
   const seriesParts = getSeriesParts(blog);
 
   return (
-    <div className="pt-20 md:pt-40">
+    <div className="pt-20 md:pt-40 relative">
+      <ScrollProgress className="mt-16 hidden sm:block" />
       <article className="container-custom px-4 section-spacing relative">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">

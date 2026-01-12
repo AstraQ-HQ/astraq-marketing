@@ -59,7 +59,7 @@ export function NavBar() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
             <Image src={logo} alt={siteConfig.name} className="w-8 h-8" />
-            <span className="hidden sm:inline font-mono text-xl text-primary">
+            <span className="font-mono text-xl text-primary">
               {siteConfig.name}
             </span>
           </Link>

@@ -69,3 +69,24 @@
 .error-callout :not(pre) > code {
   @apply bg-red-800/60 text-red-50;
 }
+
+.prose .katex-display {
+  @apply overflow-x-auto overflow-y-hidden max-w-full py-2;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose .katex-display > .katex {
+  @apply whitespace-nowrap;
+}
+
+.prose .katex-display::-webkit-scrollbar {
+  @apply h-1;
+}
+
+.prose .katex-display::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.prose .katex-display::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-sm;
+}

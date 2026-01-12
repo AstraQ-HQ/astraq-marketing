@@ -30,13 +30,13 @@ targetAudience: Cryptography engineers, security researchers, and mathematically
   icon="shield-alert"
 >
   The emergence of cryptographically relevant quantum computers (CRQCs) poses an
-  existential threat to RSA, ECDSA, and Diffie-Hellman—the cryptographic
+  existential threat to RSA, ECDSA, and Diffie-Hellman, the cryptographic
   foundations of internet security. Organizations must begin migration to
   post-quantum algorithms **now**, as encrypted data harvested today can be
   decrypted once quantum computers mature ("harvest now, decrypt later").
 </Callout>
 
-The year is 2026, and we stand at a pivotal moment in cryptographic history. The algorithms that have secured our digital infrastructure for decades—RSA, elliptic curve cryptography (ECC), and Diffie-Hellman key exchange—face an unprecedented threat from quantum computing. This isn't speculative science fiction: NIST has already finalized three post-quantum cryptographic standards (FIPS 203, 204, 205), Google has demonstrated 105-qubit quantum processors, and nation-states are actively stockpiling encrypted communications for future decryption.
+The year is 2026, and we stand at a pivotal moment in cryptographic history. The algorithms that have secured our digital infrastructure for decades, RSA, elliptic curve cryptography (ECC), and Diffie-Hellman key exchange, face an unprecedented threat from quantum computing. This isn't speculative science fiction: NIST has already finalized three post-quantum cryptographic standards (FIPS 203, 204, 205), Google has demonstrated 105-qubit quantum processors, and nation-states are actively stockpiling encrypted communications for future decryption.
 
 This three-part series provides an exhaustive mathematical treatment of post-quantum cryptography (PQC). In Part 1, we establish the threat model by examining Shor's and Grover's algorithms, exploring the complexity-theoretic foundations of cryptographic security, and understanding why certain mathematical problems remain hard even for quantum computers.
 
@@ -46,7 +46,7 @@ This three-part series provides an exhaustive mathematical treatment of post-qua
 
 Before diving into cryptographic implications, we must understand what makes quantum computers fundamentally different from classical machines.
 
-Classical computers operate on **bits**—binary values that are definitively 0 or 1. Quantum computers operate on **qubits**, which exist in a superposition of states until measured:
+Classical computers operate on **bits**: binary values that are definitively 0 or 1. Quantum computers operate on **qubits**, which exist in a superposition of states until measured:
 
 $$
 |\psi\rangle = \alpha|0\rangle + \beta|1\rangle
@@ -61,7 +61,7 @@ graph LR
     end
 
     subgraph "Quantum Qubit"
-        Q0[Superposition: α|0⟩ + β|1⟩]
+        Q0["Superposition: α|0⟩ + β|1⟩"]
         Q1[Measurement collapses to 0 or 1]
         Q0 --> Q1
     end
@@ -77,11 +77,11 @@ $$
 |\psi\rangle = \sum_{x \in \{0,1\}^n} \alpha_x |x\rangle
 $$
 
-This exponential state space is what gives quantum computers their power—but only for problems with the right mathematical structure to exploit it.
+This exponential state space is what gives quantum computers their power, but only for problems with the right mathematical structure to exploit it.
 
 ### The Complexity Landscape
 
-Cryptographic security rests on **computational hardness assumptions**—the belief that certain mathematical problems cannot be solved efficiently. We categorize problems by complexity classes:
+Cryptographic security rests on **computational hardness assumptions**: the belief that certain mathematical problems cannot be solved efficiently. We categorize problems by complexity classes:
 
 | Class   | Definition                                 | Classical Example              | Quantum Status    |
 | :------ | :----------------------------------------- | :----------------------------- | :---------------- |
@@ -108,12 +108,12 @@ graph TB
     BQP --> PSPACE
     NP --> PSPACE
 
-    style BQP fill:#ff6b6b,stroke:#333,stroke-width:2px
+    style BQP fill:#cc6666
 ```
 
 <Callout variant="info" title="The Quantum Advantage" icon="zap">
   Quantum computers don't make everything faster. They provide exponential
-  speedups only for problems with specific mathematical structure—particularly
+  speedups only for problems with specific mathematical structure, particularly
   those involving **periodicity detection** (exploited by Shor's algorithm) and
   **unstructured search** (exploited by Grover's algorithm).
 </Callout>
@@ -200,7 +200,7 @@ flowchart LR
 | Continued fractions       | $O(n^3)$ classical         | $O(n^3)$                        |
 | **Total**                 | **$O(n^3)$ quantum gates** | **$O(\exp(\sqrt[3]{n}))$ GNFS** |
 
-For a 2048-bit RSA modulus, Shor's algorithm requires roughly $4000$ logical qubits and $10^9$ quantum gates—compared to the classical General Number Field Sieve requiring $2^{112}$ operations.
+For a 2048-bit RSA modulus, Shor's algorithm requires roughly $4000$ logical qubits and $10^9$ quantum gates, compared to the classical General Number Field Sieve requiring $2^{112}$ operations.
 
 ### Experimental Realizations
 
@@ -214,7 +214,7 @@ Shor's algorithm has been demonstrated experimentally, though only for trivially
 <Callout variant="warning" title="The Qubit Gap" icon="alert-triangle">
   Current quantum computers have ~1000 noisy physical qubits. Breaking RSA-2048
   requires roughly **20 million** physical qubits with error correction. The gap
-  is enormous, but progress is exponential—qubit counts are doubling every 1-2
+  is enormous, but progress is exponential, qubit counts are doubling every 1-2
   years.
 </Callout>
 
@@ -242,7 +242,7 @@ This is actually _easier_ than factoring RSA-2048, because elliptic curve key si
 
 ## Grover's Algorithm: Threatening Symmetric Cryptography
 
-While Shor's algorithm provides exponential speedups, Grover's 1996 algorithm offers a more modest—but still significant—quadratic speedup for unstructured search problems.
+While Shor's algorithm provides exponential speedups, Grover's 1996 algorithm offers a more modest, but still significant, quadratic speedup for unstructured search problems.
 
 ### The Unstructured Search Problem
 
@@ -360,7 +360,7 @@ $$
 
 For RSA-2048, this is approximately $2^{112}$ operations.
 
-**Quantum Vulnerability**: Shor's algorithm finds factors in $O((\log N)^3)$ time—a polynomial—by exploiting the hidden periodic structure in modular exponentiation.
+**Quantum Vulnerability**: Shor's algorithm finds factors in $O((\log N)^3)$ time, a polynomial, by exploiting the hidden periodic structure in modular exponentiation.
 
 ### Diffie-Hellman: Discrete Logarithm
 
@@ -374,7 +374,7 @@ For RSA-2048, this is approximately $2^{112}$ operations.
 
 **Hard Problem**: Given curve $E$, point $G$, and $Q = [k]G$, find $k$.
 
-**Classical Hardness**: Best attacks (Pollard-rho) run in $O(\sqrt{n})$ where $n$ is the group order—fully exponential.
+**Classical Hardness**: Best attacks (Pollard-rho) run in $O(\sqrt{n})$ where $n$ is the group order, fully exponential.
 
 **Quantum Vulnerability**: Shor's algorithm adapts to elliptic curves, providing polynomial-time solution.
 
@@ -411,8 +411,8 @@ graph TD
         MP -.- NQ
     end
 
-    style HSP fill:#ff6b6b,stroke:#333
-    style NQ fill:#4ecdc4,stroke:#333
+    style HSP fill:#cc6666
+    style NQ fill:#66b3b3
 ```
 
 ---
@@ -435,7 +435,7 @@ $$
 2. **Closest Vector Problem (CVP)**: Given a target point, find the closest lattice point
 3. **Learning With Errors (LWE)**: Distinguish $(\mathbf{A}, \mathbf{A}\mathbf{s} + \mathbf{e})$ from random, where $\mathbf{e}$ is small error
 
-The best known quantum algorithms for these problems (using quantum walks and amplitude estimation) provide at most polynomial speedups—nowhere near the exponential speedups of Shor against factoring.
+The best known quantum algorithms for these problems (using quantum walks and amplitude estimation) provide at most polynomial speedups, nowhere near the exponential speedups of Shor against factoring.
 
 $$
 \text{Quantum LWE: } 2^{\Omega(n)} \quad \text{vs} \quad \text{Quantum RSA: } O((\log n)^3)
@@ -512,9 +512,9 @@ NIST defines five security levels corresponding to the effort required to break 
 | Level | Target Security | Classical Equivalent     | Example Scheme |
 | :---- | :-------------- | :----------------------- | :------------- |
 | **1** | ≥ 2^128         | AES-128 block search     | ML-KEM-512     |
-| **2** | ≥ 2^192         | SHA-384 collision search | —              |
+| **2** | ≥ 2^192         | SHA-384 collision search | N/A            |
 | **3** | ≥ 2^192         | AES-192 block search     | ML-KEM-768     |
-| **4** | ≥ 2^256         | SHA-512 collision search | —              |
+| **4** | ≥ 2^256         | SHA-512 collision search | N/A            |
 | **5** | ≥ 2^256         | AES-256 block search     | ML-KEM-1024    |
 
 These levels account for both classical and quantum attacks, with Grover's algorithm setting the quantum security floor.
@@ -677,7 +677,7 @@ We'll explore non-lattice approaches to post-quantum security:
 - **Multivariate cryptography**: MQ-hard problems
 
 <Callout variant="success" title="Key Takeaway" icon="lightbulb">
-  Post-quantum cryptography isn't about quantum computers being "faster"—it's
+  Post-quantum cryptography isn't about quantum computers being "faster", it's
   about exploiting different mathematical structures. Problems with hidden
   periodicity (factoring, discrete log) fall to quantum algorithms, while
   problems without such structure (lattices, codes, hashes) remain hard.
@@ -700,9 +700,9 @@ We'll explore non-lattice approaches to post-quantum security:
 
 ### Surveys and Educational Resources
 
-- Bernstein, D.J. & Lange, T. (2017). "Post-Quantum Cryptography" — Encyclopedic survey
+- Bernstein, D.J. & Lange, T. (2017). "Post-Quantum Cryptography": Encyclopedic survey
 - Regev, O. (2005). "On Lattices, Learning with Errors, Random Linear Codes, and Cryptography"
-- Micciancio, D. & Regev, O. (2008). "Lattice-based Cryptography" — Foundational survey
+- Micciancio, D. & Regev, O. (2008). "Lattice-based Cryptography": Foundational survey
 - Bavdekar et al. (2022). "Post Quantum Cryptography: Techniques, Challenges, Standardization, and Directions"
 
 ### Experimental Quantum Computing
