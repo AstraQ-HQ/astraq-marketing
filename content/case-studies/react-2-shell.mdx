@@ -2,8 +2,41 @@
 title: "React2Shell: Critical RCE in React Server Components (CVE-2025-55182)"
 summary: "A critical remote code execution vulnerability in React Server Components that enables attackers to execute arbitrary server-side JavaScript through crafted Flight protocol payloads."
 publishedAt: 2025-12-05
+attackDate: 2025-12-01
 category: "Security"
 draft: false
+attackType:
+  - "Remote Code Execution"
+  - "Prototype Pollution"
+severity: "Critical"
+affectedOrganizations:
+  - "Nuclear Infrastructure Organizations"
+  - "Energy Sector Organizations"
+  - "SaaS Platforms"
+affectedIndustries:
+  - "Technology"
+  - "Energy"
+  - "Nuclear"
+threatActors:
+  - "China-nexus threat groups"
+  - "Cybercrime Operations"
+impact: "Remote code execution enabling complete server compromise through unauthenticated POST requests. Attackers can execute arbitrary system commands, deploy persistent access mechanisms, and pivot to adjacent systems."
+cvssScore: 10.0
+relatedCVEs:
+  - "CVE-2025-55182"
+lessonsLearned:
+  - "Even well-architected frameworks require rigorous security validation, particularly when handling untrusted input in serialization protocols"
+  - "Protocol-level deserialization flaws can chain into complete server compromise, bypassing traditional security controls"
+  - "Implement input validation for all serialization protocols, especially Flight protocol payloads"
+  - "Block unauthenticated requests to RSC endpoints at the network perimeter"
+  - "Restrict dangerous Node.js capabilities using security profiles and runtime hardening"
+tags:
+  - "react"
+  - "rce"
+  - "prototype-pollution"
+  - "cve-2025-55182"
+  - "server-components"
+  - "nextjs"
 ---
 
 <LLMOnly

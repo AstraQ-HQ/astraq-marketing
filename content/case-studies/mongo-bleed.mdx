@@ -2,8 +2,33 @@
 title: "MongoBleed: Pre-Authentication Heap Memory Disclosure in MongoDB (CVE-2025-14847)"
 summary: "A critical information disclosure vulnerability in MongoDB's network protocol that allows unauthenticated remote attackers to read sensitive data from server heap memory."
 publishedAt: 2026-01-02
+attackDate: 2025-12-19
 category: "Security"
 draft: false
+attackType:
+  - "Information Disclosure"
+  - "Memory Disclosure"
+severity: "High"
+affectedIndustries:
+  - "Technology"
+  - "Healthcare"
+  - "Finance"
+impact: "Pre-authentication heap memory disclosure allowing unauthenticated attackers to read sensitive data from server heap memory, including credentials, API keys, and session tokens. Enables credential harvesting and lateral movement."
+cvssScore: 7.5
+relatedCVEs:
+  - "CVE-2025-14847"
+lessonsLearned:
+  - "Never expose MongoDB directly to the internet - always place behind VPN, bastion hosts, or private cloud networks"
+  - "Implement network segmentation to isolate database tier from application and presentation tiers"
+  - "Enable MongoDB authentication (--auth) on all deployments with role-based access control"
+  - "Enable TLS/SSL for all client connections and implement encryption at rest for sensitive data"
+  - "Enable MongoDB audit logging and implement SIEM integration for real-time security event correlation"
+tags:
+  - "mongodb"
+  - "information-disclosure"
+  - "heap-memory"
+  - "cve-2025-14847"
+  - "database-security"
 ---
 
 <LLMOnly
