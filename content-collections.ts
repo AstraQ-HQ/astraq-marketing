@@ -87,8 +87,8 @@ const blogs = defineCollection({
       })
       .optional()
       .default({
-        name: "AstraQ Team",
-        bio: "The AstraQ Team writes about technology, security, and innovation.",
+        name: "Team Astraq",
+        bio: "The Team Astraq writes about technology, security, and innovation.",
       }),
     series: z
       .object({
@@ -294,8 +294,8 @@ const caseStudies = defineCollection({
       })
       .optional()
       .default({
-        name: "AstraQ Team",
-        bio: "The AstraQ Team writes about technology, security, and innovation.",
+        name: "Team Astraq",
+        bio: "The Team Astraq writes about technology, security, and innovation.",
       }),
     attackDate: z.coerce.date(),
     attackPeriod: z.string().optional(),

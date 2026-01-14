@@ -1,11 +1,11 @@
 ---
-title: The Seeing Eye
+title: "Vessel Detection"
 summary: An exhaustive technical exploration of the dual-sensor vessel detection architecture within OS², dissecting the physics of Synthetic Aperture Radar (SAR) and Electro-Optical (EO) imagery, the implementation of Vision and Swin Transformers, and the mathematical rigor of multi-scale feature pyramids.
-publishedAt: 2025-09-24
-category: Maritime Intelligence
+publishedAt: 2026-01-06
+category: Cybersecurity & Maritime Intelligence
 draft: false
 series:
-  name: "Mechanics of Ocean Surveillance"
+  name: "Maritime Domain Awareness"
   part: 2
 ---
 
@@ -14,111 +14,89 @@ series:
 type: deep-dive
 difficulty: advanced
 keyTakeaways:
-  - Implement Vision Transformer (ViT) for SAR vessel detection
-  - Build Swin Transformer with Feature Pyramid Networks for EO imagery
-  - Apply distance-based NMS and multi-scale anchor strategies
-prerequisites: Deep learning, computer vision, satellite imagery fundamentals
-targetAudience: ML engineers working on remote sensing and maritime surveillance
+  - Understand SAR and EO sensor physics for maritime vessel detection
+  - Learn how Vision Transformers and Swin Transformers process satellite imagery
+  - Master the mathematical foundations of patch embedding, attention mechanisms, and feature pyramids
+  - Comprehend maritime-specific adaptations like distance-based NMS and cartesian heading decomposition
+prerequisites: Deep learning fundamentals, computer vision concepts, understanding of transformer architectures, basic signal processing
+targetAudience: Machine learning engineers, computer vision researchers, and technical staff implementing satellite-based detection systems
 `}
 />
 
-The ocean is not a void; it is a canvas of chaotic entropy. To the unassisted human eye, it is a monotonous expanse of blue, broken only by the transient white of capping waves. But to the sensors orbiting hundreds of kilometers above the lithosphere, the ocean is a dynamic theater of radiometric noise, atmospheric attenuation, and spectral interference. The fundamental challenge of **Maritime Domain Awareness (MDA)** is not merely observation: it is _discrimination_. It is the computational imperative to distinguish the structured, geometric signature of a vessel from the stochastic, organic texture of the sea.
+Vessel detection is the primary function of OS². The goal is to identify ships in satellite imagery and determine their location. This requires distinguishing vessels from ocean features, weather patterns, and sensor noise.
 
-In the first installment of this series, we introduced the high-level architecture of **OS²**, AstraQ's solution to the maritime surveillance paradox. Today, we descend into the mathematical and architectural depths of its first pillar: **Vessel Detection**.
+OS² uses two satellite data sources to detect vessels. This document explains how each sensor works, how data is processed, and how deep learning models identify ships.
 
-This is not a task that can be solved by a single modality. The maritime environment is fickle; it hides behind clouds, it darkens at night, and it dazzles under the specular reflection of the sun. To pierce this veil, our solution employs a **dual-sensor strategy**, synthesizing the all-weather persistence of **Synthetic Aperture Radar (SAR)** with the high-fidelity characterization of **Electro-Optical (EO)** multispectral imagery.
+# Part One: Synthetic Aperture Radar (SAR)
 
-This treatise will bifurcate the analysis: first, examining the physics and processing of radar returns through the lens of Sentinel-1, and second, exploring the spectral richness of Sentinel-2 through hierarchical transformer architectures.
+SAR is an active sensor that operates in all weather conditions and darkness. It sends microwave pulses to the ocean and records the returning signal.
 
-## Part I: The Piercing Gaze - Synthetic Aperture Radar (SAR)
+## How SAR Works
 
-![Synthetic Aperture Radar imagery showing vessel detection](/images/blog/os2-vessel-detection/sar2.jpg)
+Optical sensors need sunlight to work. SAR systems send their own signal, so they operate at night and in cloud cover.
 
-### The Physics of Radar Backscatter
+The ocean surface reflects radar energy in different ways depending on surface roughness. Smooth water reflects most radar energy away from the sensor, creating dark areas in SAR images. Rough water caused by wind creates a scattered return, which appears as noise in the image.
 
-To understand why we use SAR, one must appreciate the limitations of light. Optical sensors are passive; they rely on reflected solar energy. When the sun sets or the stratus clouds thicken, optical sensors are blinded. SAR, conversely, is an active sensor. It illuminates the Earth with microwave pulses and records the echo.
+Vessels are constructed from metal and have angular structures. When radar hits a ship, the signal bounces between the hull, deck, and superstructure multiple times before returning to the sensor. This creates a strong, bright signal that stands out against the darker ocean background.
 
-In the context of maritime detection, we are interested in **backscatter**: the portion of the radar energy reflected directly back to the sensor. The ocean surface acts largely as a specular reflector; most of the radar energy glances off the water and travels away from the sensor, resulting in a dark image (low backscatter). However, wind-driven waves create roughness, causing Bragg scattering which manifests as noise, or "sea clutter."
+SAR imagery contains speckle noise—a grainy pattern caused by radar wave interference. Detecting a vessel means finding a structural signal that is distinguishable from this noise pattern.
 
-Vessels, constructed of hard, metallic angles, behave as **corner reflectors**. When a radar pulse strikes the superstructure of a ship, it bounces off the deck, hits the bridge, and returns strongly to the source. This "double-bounce" mechanism creates a bright, high-intensity signal against the darker oceanic background.
+![A Sentinel-1 SAR scene illustrating the core challenge of vessel detection](/images/blog/os2-vessel-detection/sar2.jpg)
 
-However, SAR imagery is plagued by **speckle noise**: a granular interference pattern caused by the coherent nature of the radar waves interfering constructively and destructively Detecting a vessel in SAR is not simply finding a bright spot; it is statistically differentiating a structural anomaly from the multiplicative noise of the sea state.
+_Figure: A Sentinel-1 SAR scene illustrating the core challenge of vessel detection._  
+SAR imagery is dominated by **speckle noise**—a grainy interference pattern produced by radar wave scattering. A vessel appears as a **bright structural return** caused by multi-bounce reflections from metallic surfaces, and detection means separating this signal from the surrounding ocean texture.
 
-### The Sentinel-1 Pipeline: From Raw Signal to Tensor
+## Processing Sentinel-1 Data
 
-Our pipeline ingests **Sentinel-1 Ground Range Detected (GRD)** products. These files are not images in the traditional sense; they are radiometric measurements. To make them digestible for a neural network, they must undergo a rigorous transformation.
+OS² processes Sentinel-1 Ground Range Detected (GRD) products. These are radiometric measurements that must be converted into a format suitable for machine learning.
 
-#### Radiometric Calibration
+**Radiometric Calibration** - The system extracts the VV (Vertical-Vertical) polarization band from raw SAR data. VV polarization is more sensitive to ship structures than other polarization modes. Raw amplitude values are converted to the decibel scale using logarithmic compression. This brings extremely bright signals (from vessels) and very faint signals (from ocean) into a manageable numerical range.
 
-- Extract the VV (Vertical-Vertical) polarization band and convert linear amplitude values to decibel scale using logarithmic compression, which mitigates the extreme dynamic range of radar returns (from faint ocean signals to bright vessel reflections) that would otherwise cause gradient explosion in neural networks.
-- We extract the **VV (Vertical-Vertical) polarization** band, which is generally more sensitive to ship structures.
-- This transformation brings the faint signals of the ocean and the bright signals of the vessels into a unified numerical range.
+**Statistical Normalization** - Neural networks require input data with zero mean and unit variance. SAR data in decibels does not naturally have this property. The system applies global statistical normalization derived from maritime datasets. Extreme values outside the typical range are clipped to remove radar artifacts and land interference.
 
-#### Statistical Normalization
+**Tiling and Georeferencing** - Processing an entire satellite swath in one operation is computationally impractical. The system divides the swath into tiles of 128 by 128 pixels with overlap to ensure vessels are fully captured even when they span tile boundaries.
 
-- Neural networks crave inputs with zero mean and unit variance. SAR data, even in decibels, does not naturally conform to this distribution.
-- Apply global statistical normalization ($\mu_{global} = 0.0025$, $\sigma_{global} = 0.0053$) derived from maritime datasets to achieve zero mean and unit variance, with outlier clipping to the range $[-0.002, 0.02]$ to remove radar artifacts and land-based interference.
+Each pixel must be mapped back to its precise geographic location. The system uses bivariate spline interpolation with ground control points from satellite metadata to convert pixel coordinates to WGS84 latitude and longitude values.
 
-#### Tiling and Georeferencing
+## Vision Transformer Backbone
 
-- Processing a full satellite swath (which can be hundreds of kilometers wide) in a single pass is computationally intractable. We employ a sliding window approach.
-- Partition the satellite swath into $128 \times 128$ pixel tiles with 115-pixel stride overlap to ensure complete vessel capture across tile boundaries, then use Bivariate Spline Interpolation on Ground Control Point grids from SAFE metadata to precisely map pixels back to WGS84 coordinates.
-- Crucially, we must retain the geospatial context. We utilize **Bivariate Spline Interpolation** on the Ground Control Point (GCP) grids provided in the SAFE metadata. This allows us to map any pixel $(x, y)$ in a $128 \times 128$ tile back to its precise WGS84 Latitude and Longitude.
+OS² uses a Vision Transformer (ViT) for feature extraction instead of a standard convolutional neural network. Convolutional networks process small local regions. Transformers can process entire images, understanding the context of the surrounding ocean surface, which improves the ability to distinguish vessels from wave patterns.
 
-### The Architecture: Vision Transformer (ViT) Backbone
+**Patch Embedding** - The input image of 128 by 128 pixels is divided into non-overlapping patches of 4 by 4 pixels, producing 1024 patches total. Each patch is converted to a vector and projected into a higher-dimensional space of 768 dimensions through a learned transformation. Positional embeddings are added to preserve spatial information.
 
-For feature extraction, we abandon the local receptive fields of Convolutional Neural Networks (CNNs) in favor of the global context modeling of the **Vision Transformer (ViT)**. In a maritime scene, the "context" of the water texture is just as important as the object itself. A CNN looking at a small patch of rough water might mistake a wave for a boat. A Transformer, attending to the entire $128 \times 128$ tile, understands that the wave is part of a larger pattern, while the vessel is a distinct anomaly.
+**Patch Embedding Mathematics** - The input image is converted to patches and embedded using the following transformation:
 
-#### Patch Embedding
+$$z_0 = [x_{patch}^1 E; x_{patch}^2 E; ...; x_{patch}^{1024} E] + E_{pos}$$
 
-The input image $I \in \mathbb{R}^{128 \times 128}$ is sliced into non-overlapping patches of size $4 \times 4$. This yields a sequence of $32 \times 32 = 1024$ patches. Each patch is flattened into a vector and projected into a higher-dimensional embedding space (768 dimensions) via a learned linear transformation $E$.
+Where $E$ is the learned linear transformation and $E_{pos}$ represents positional embeddings.
 
-To retain spatial information (since Transformers are permutation invariant), we add learnable positional embeddings $E_{pos}$:
+**Multi-Head Self-Attention** - The core mechanism of the Vision Transformer is self-attention. This computes relationships between every patch and every other patch in the image. The model uses 12 attention heads, allowing it to capture different types of features simultaneously—one head might focus on texture while another focuses on geometric edges.
 
-$$
-z_0 = [x_{patch}^1 E; x_{patch}^2 E; ...; x_{patch}^{1024} E] + E_{pos}
-$$
+The attention mechanism is computed as:
 
-#### Multi-Head Self-Attention (MHSA)
+$$Attention(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
-The core of the ViT is the self-attention mechanism, which computes the relationship between every patch and every other patch. This allows the model to "attend" to distant features simultaneously.
+Where $Q$ (Query), $K$ (Key), and $V$ (Value) are matrices derived from input embeddings, and $\sqrt{d_k}$ is a scaling factor to prevent vanishing gradients in the softmax function.
 
-$$
-Attention(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-$$
+The output passes through a feed-forward network with nonlinear activation functions. After 12 layers of processing, the feature sequence is reshaped back into a 2D feature map of 32 by 32 resolution with 768 channels.
 
-Here, $Q$ (Query), $K$ (Key), and $V$ (Value) are matrices derived from the input embeddings. The term $\sqrt{d_k}$ acts as a scaling factor to prevent vanishing gradients in the _softmax_ function.Our architecture employs 12 attention heads, allowing the model to capture different types of relationships (e.g., one head might focus on texture, another on geometric edges).
+**Detection Head: Faster R-CNN** - A Faster R-CNN detection head is attached to the ViT backbone. This two-stage detector identifies objects and produces bounding boxes around them.
 
-The output passes through a Feed-Forward Network (FFN) with GELU activation, introducing the necessary non-linearity to model complex radar signatures.After 12 layers of this processing, the sequence is reshaped back into a 2D feature map $F \in \mathbb{R}^{32 \times 32 \times 768}$, ready for the detection head.
+The Region Proposal Network (RPN) slides over the feature map and evaluates anchor boxes of different aspect ratios. For each anchor, it outputs two values: an objectness score (probability of containing a vessel) and coordinate adjustments needed to fit the anchor to the actual vessel location.
 
-#### The Detection Head: Faster R-CNN
+**RPN Loss Function** - The loss function for the Region Proposal Network combines classification and regression:
 
-We attach a `Faster R-CNN` detection head to the ViT backbone. This two-stage detector is renowned for its accuracy, a non-negotiable requirement for security applications.
+$$\mathcal{L}^{RPN} = \mathcal{L}_{cls} + \lambda \mathcal{L}_{reg} $$
 
-**Region Proposal Network (RPN)**
-The RPN slides over the feature map, evaluating "anchor boxes" of varying aspect ratios (0.5, 1.0, 2.0). It outputs two things for each anchor:
+The regression loss uses Smooth L1 Loss, which is robust to outliers—important when dealing with noisy SAR data.
 
-1.  **Objectness Score:** The probability that the anchor contains a foreground object (vessel).
-2.  **Box Deltas:** The coordinate adjustments $(dx, dy, dw, dh)$ needed to fit the anchor to the ground truth.
+**Distance-Based Non-Maximum Suppression** - Standard non-maximum suppression (NMS) uses intersection-over-union (IoU) to eliminate duplicate detections. This works poorly for vessels because ships are long and thin. A diagonal-oriented ship in a standard bounding box may have low IoU with another box that describes the same vessel.
 
-The loss function for the RPN is a composite of classification and regression losses:
+OS² implements distance-based NMS instead. It calculates the Euclidean distance between the centers of bounding boxes:
 
-$$
-\mathcal{L}^{RPN} = \mathcal{L}_{cls} + \lambda \mathcal{L}_{reg}
-$$
+$$d_{ij} = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2}$$
 
-The regression loss employs **Smooth L1 Loss**, which is robust to outliers: a critical feature when dealing with the noisy variance of SAR data.
-
-**Distance-Based Non-Maximum Suppression (NMS)**
-Standard NMS uses Intersection-over-Union (IoU) to eliminate duplicate detections. If two boxes overlap significantly, the one with the lower score is discarded. However, this fails in maritime scenarios. Ships are often long and thin. If a ship is oriented diagonally, a standard bounding box might be large and mostly empty. A second, overlapping detection might have a low IoU but essentially describe the same vessel.
-
-We implement **Distance-Based NMS**. Instead of area overlap, we look at the Euclidean distance between the centers of the bounding boxes:
-
-$$
-d_{ij} = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2}
-$$
-
-If $d_{ij} < t_{dist}$ (set to 20 meters for Sentinel-1), we suppress the lower-confidence box. This aligns with physical reality: two distinct vessels cannot occupy the same coordinate space within a 20-meter radius.
+If $d_{ij} < t_{dist}$ (set to 20 meters for Sentinel-1), the lower-confidence box is suppressed. This reflects physical reality—two separate vessels cannot occupy the same 20-meter radius.
 
 ```mermaid
 graph TD
@@ -146,79 +124,62 @@ graph TD
     end
 ```
 
-## Part II: The Spectral Analyst - Electro-Optical (EO) Detection
+## Part Two: Electro-Optical (EO) Detection
 
-While SAR provides the "where," Sentinel-2 EO imagery provides the "what." Optical data offers intuitive visual confirmation and, crucially, spectral depth. A vessel is not just a shape; it is a material composition: steel, paint, rust, sitting atop water. Sentinel-2's multispectral instrument (MSI) allows us to exploit these spectral contrasts.
+Sentinel-2 optical imagery provides visual confirmation and spectral information. Where SAR answers "is there something here", EO answers "what is this object made of and what are its characteristics".
 
-### The Multispectral Advantage
+### Multispectral Imaging
 
-Sentinel-2 captures light across 13 spectral bands. For our **OS²** solution, we extract nine specific bands tailored for maritime discrimination:
+Sentinel-2 captures light across 13 spectral bands. OS² uses nine bands selected for maritime applications:
 
-- **Visible (RGB - B02, B03, B04):** For standard visual features and hull coloration.
-- **Red-Edge (B05, B06, B07):** Capturing the transition from red to near-infrared. These bands are sensitive to vegetation (algae on hulls) and subtle material differences.
-- **Near-Infrared (B08):** Provides extreme contrast between water (which absorbs NIR) and land or floating objects (which reflect it).
-- **Shortwave Infrared (SWIR - B11, B12):** These bands penetrate atmospheric haze better than visible light and are sensitive to moisture content, aiding in distinguishing metal from water.
+- **Visible bands (RGB):** Standard visual features and hull color.
+- **Red-edge bands:** Sensitive to vegetation and material differences.
+- **Near-infrared:** Water absorbs near-infrared light while metal objects reflect it, creating strong contrast.
+- **Shortwave infrared:** Penetrates atmospheric haze better than visible light and detects moisture, helping distinguish metal from water.
 
-We perform **differential normalization**. The RGB bands, which have similar dynamic ranges, are normalized with one set of constants ($\sigma_{RGB}=3000$), while the other bands, which often have higher reflectance values, use a different scaling factor ($\sigma_{other}=8160$). This preserves the relative spectral signatures that the model relies on for classification.
+The system applies differential normalization. RGB bands use one set of normalization constants while other bands use different scaling factors. This preserves the relative differences between spectral bands that the model uses for classification.
 
-### The Architecture: Swin Transformer
+### Swin Transformer Architecture
 
-For EO detection, we face a scale problem. A small fishing boat might be 10 meters long (1 pixel), while a container ship might be 300 meters (30 pixels). A standard Vision Transformer (ViT) processes the image at a single scale. Instead, we utilize the **Swin Transformer (Shifted Window Transformer)**, a hierarchical architecture designed to create multi-scale feature pyramids.
+EO detection must handle vessels of varying sizes. A small fishing boat might be one pixel while a large container ship might be 30 pixels. The Swin Transformer is a hierarchical architecture designed to process images at multiple scales.
 
-**Shifted Window Attention** The Swin Transformer improves upon ViT efficiency by computing self-attention only within local windows (e.g., $7\times7$ patches), rather than globally. This reduces computational complexity from quadratic to linear with respect to image size.
+**Shifted Window Attention** - The Swin Transformer computes self-attention only within local windows rather than globally across the entire image. This reduces computational cost while still allowing information to flow between windows through a shifting mechanism. In alternating layers, the window position shifts by half a window width, allowing the model to build global understanding step-by-step.
 
-To allow information to propagate between windows, the architecture shifts the window partitioning by$(M/2,M/2)$ pixels in alternating layers.
+**Hierarchical Processing** -The Swin Transformer processes images in stages. After each stage, neighboring pixels are merged together and features are compressed. This creates a hierarchy of feature maps:
 
-- **Layer $l$:** Regular window partitioning.
-- **Layer $l+1$:** Shifted window partitioning.
+1. Stage one at 128 by 128 resolution captures fine details.
+2. Stage two at 64 by 64 resolution.
+3. Stage three at 32 by 32 resolution.
+4. Stage four at 16 by 16 resolution captures semantic context.
 
-This mechanism, mathematically represented as **SW-MSA** (Shifted Window Multi-Head Self Attention), enables the network to build a global understanding of the image step-by-step, capturing fine details of small boats in the early layers and the large-scale context of the ocean in the deeper layers.
+### Feature Pyramid Network
 
-**Hierarchical Downsampling** The Swin Transformer is structured in stages. After each stage, a "Patch Merging" layer concatenates features from $2\times2$ neighboring patches and applies a linear projection. This reduces the spatial resolution by half while doubling the channel depth.
+A Feature Pyramid Network (FPN) fuses features from different scales. High-level semantic features are upsampled and combined with low-level detailed features. This is computed as:
 
-- **Stage 1:** 128×128 resolution (Fine details).
-- **Stage 2:** 64×64 resolution.
-- **Stage 3:** 32×32 resolution.
-- **Stage 4:** 16×16 resolution (Semantic context) .
+$$P_3 = Conv_{1 \times 1}(C_3) + Upsample(P_5)$$
 
-This produces a hierarchy of feature maps ${C1,C3,C5,C7}$ similar to a ConvNet, which is essential for the next component: the Feature Pyramid Network.
+This creates a pyramid where every level contains both semantic meaning and spatial detail.
 
-### Feature Pyramid Network (FPN) and Multi-Scale Detection
+A separate Faster R-CNN detection head is attached to each pyramid level with anchor sizes matched to that level:
 
-To detect vessels of all sizes simultaneously, we employ a **Feature Pyramid Network (FPN)**. The FPN takes the hierarchical features from the Swin Transformer and fuses them via a top-down pathway with lateral connections.
+- High-resolution levels use small anchors for small boats.
+- Low-resolution levels use large anchors for large ships.
 
-Mathematically, a higher-level feature map P5 is upsampled (resized larger) and added element-wise to the lower-level map C3 (after a 1×1 convolution to match channels).
+This scale-adaptive approach ensures that detection performance is consistent across vessel sizes.
 
-$$P3=Conv_{1 \times 1}(C3)+Upsample(P5)$$
+### Attribute Extraction
 
-This creates a pyramid of features ${P1,P3,P5,P7}$ where every level is semantically strong _and_ spatially resolute.
+Beyond identifying vessel locations, the system extracts vessel attributes from optical data. When a vessel is detected, the surrounding feature map is processed by multiple decoder heads:
 
-We attach a separate Faster R-CNN head to each level of this pyramid, with **anchor sizes tailored to the level**:
+1. **Length and width:** Predicted using regression with smooth L1 loss.
+2. **Speed (SOG):** Inferred from wake patterns visible in the image.
+3. **Heading:** Ship direction is a circular variable where 359 degrees and 1 degree are nearly identical. The system decomposes heading into cartesian coordinates so the network can learn orientation without discontinuity:
 
-- **P1 (High Res):** Uses small anchors ($32$ pixels). Optimized for dinghies and small craft.
-- **P7 (Low Res):** Uses massive anchors ($256$ pixels). Optimized for supertankers.
+$$x = \cos(\theta_{ENU} \cdot \frac{\pi}{180})$$
 
-This **scale-adaptive detection** strategy ensures that a supertanker doesn't overwhelm the detector looking for a fishing boat, and a fishing boat isn't lost in the receptive field of a detector looking for a carrier.
+$$y = \sin(\theta_{ENU} \cdot \frac{\pi}{180})$$
 
-### Beyond Detection: Attribute Extraction
-
-In the EO domain, we do not stop at bounding boxes. We extract intelligence. We replace the standard classification head with a **Multi-Task Decoder**.
-
-Using **Adaptive Average Pooling** to distill the feature map of a detected vessel into a fixed vector, we feed this representation into parallel regression heads:
-
-1.  **Length & Width:** Predicted using **Smooth L1 Loss** against scaled targets ($meters/100$).
-2.  **Speed (SOG):** Inferred from wake patterns. A longer, more turbulent wake correlates with higher speed.
-3.  **Heading:** This is a circular variable ($0\degree=360\degree$). Standard regression fails here (predicting $359 \degree$ when the truth is $1 \degree$ results in a huge error, though they are close). We solve this by regressing the heading into Cartesian components:
-
-$$
-    x=cos(\theta_{ENU} \cdot \frac{\pi}{180})
-$$
-
-$$
-    y=sin(\theta_{ENU} \cdot \frac{\pi}{180})
-$$
-
-    This decomposition allows the network to learn orientation without the discontinuity of the angular wraparound.
+This cartesian decomposition allows the network to learn heading as a continuous function without the wraparound problem at 360 degrees.
 
 ```mermaid
 graph TD
@@ -254,10 +215,10 @@ graph TD
     end
 ```
 
-### Conclusion: The Synthesis of Sight
+## Conclusion
 
-The **OS²** detection architecture is a testament to the power of specialized intelligence. We do not force a single model to carry the burden of the entire electromagnetic spectrum. Instead, we deploy an ensemble of masters: the Vision Transformer for the noisy, abstract world of radar, and the Swin Transformer for the detailed, multi-scaled world of optics.
+OS² uses two complementary sensors to detect vessels. SAR operates in all weather and darkness, providing reliable detection when optical sensors cannot function. EO imagery provides detailed information about vessel characteristics and attributes.
 
-By anchoring our deep learning models in the physical realities of the domain, using distance-based suppression for maritime geometries, cartesian decomposition for angular headings, and decibel calibration for radar reflectivity, we achieve a robustness that purely data-driven approaches cannot match.
+Vision Transformers process SAR data by understanding the global context of ocean texture. Swin Transformers process EO data at multiple scales to handle vessels of different sizes. These architectures, combined with maritime-specific design choices like distance-based NMS and cartesian heading decomposition, provide robust vessel detection across diverse maritime conditions.
 
-Yet, a detection is merely a snapshot in time. A ship detected at $14:00$ is a ghost by $14:05$. To transform these static coordinates into a living, breathing understanding of maritime flow, we must connect the dots. In the next installment, we will explore the **Correlation Engine**, the mathematical weaver that binds these isolated detections to their digital identities.
+Detection identifies vessel locations. The next step is correlating these detections with vessel identities from AIS broadcasts. This process is covered in the subsequent technical documentation.

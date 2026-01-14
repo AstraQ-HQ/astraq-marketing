@@ -16,7 +16,10 @@ export async function GET(
   const caseStudy = allCaseStudiesByDate.find((c) => c.slug === slug);
 
   if (!caseStudy) {
-    return NextResponse.json({ error: "Case study not found" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Case study not found" },
+      { status: 404 },
+    );
   }
 
   return new NextResponse(caseStudy.content, {

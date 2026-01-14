@@ -1,11 +1,11 @@
 ---
-title: The Connecting Thread
-summary: "A deep technical dive into the Correlation Engine of OS², exploring the mathematics of weighted bipartite matching, the physics of kinematic coherence, and the algorithmic elegance of the Hungarian method in fusing anonymous satellite detections with AIS identity data."
-publishedAt: 2025-09-28
-category: Maritime Intelligence
+title: "Correlation Engine: Matching Detections to Vessel Identities"
+summary: A deep technical dive into the Correlation Engine of OS², exploring the mathematics of weighted bipartite matching, the physics of kinematic coherence, and the algorithmic elegance of the Hungarian method in fusing anonymous satellite detections with AIS identity data.
+publishedAt: 2026-01-06
+category: Cybersecurity & Maritime Intelligence
 draft: false
 series:
-  name: "Mechanics of Ocean Surveillance"
+  name: "Maritime Domain Awareness"
   part: 3
 ---
 
@@ -17,138 +17,120 @@ keyTakeaways:
   - Implement weighted bipartite matching for vessel-AIS correlation
   - Use Hungarian algorithm for optimal assignment problems
   - Apply cascaded matching strategy for confidence-based association
-prerequisites: Graph theory, linear algebra, maritime AIS fundamentals
-targetAudience: Data scientists working on sensor fusion and tracking systems
+  - Understand kinematic coherence and temporal displacement in matching
+prerequisites: Graph theory, linear algebra, maritime AIS fundamentals, optimization algorithms
+targetAudience: Data scientists working on sensor fusion and tracking systems, maritime intelligence analysts
 `}
 />
 
-In the previous volume, we explored the "Seeing Eye": the complex neural architectures that allow machines to perceive vessels amidst the radiometric chaos of the ocean. Yet, perception is not knowledge. A bounding box on a satellite image is merely a spatial assertion: _"Something is here."_ It possesses geometry, but it lacks **identity**.
+In the previous section, we explored how OS² detects vessels in satellite imagery. However, detection alone provides incomplete information. A detection tells us "something is here" but does not identify which vessel it is.
 
-To transform a raw detection into actionable intelligence, we must answer the question: _"Who is this?"_
+The Correlation Engine solves this problem by linking satellite detections to vessel identities from the Automatic Identification System (AIS). This document explains how OS² matches anonymous detections with AIS broadcast data.
 
-This is the challenge of **Correlation**. It is the digital act of weaving together two disparate threads of reality: the instantaneous, anonymous truth of the satellite image, and the continuous, self-reported narrative of the Automatic Identification System (AIS).
+![Correlation visualization](/images/blog/os2-correlation/correlation_dark.png#dark-mode-only)
+![Correlation visualization](/images/blog/os2-correlation/correlation_light.png#light-mode-only)
 
-At AstraQ Cyber Defence, we view this not as a simple database join, but as a complex optimization problem rooted in graph theory and kinematics. This volume dissects the **Correlation Engine** of OS², detailing how we employ weighted bipartite matching and the Hungarian algorithm to bridge the identity gap.
+## The Problem of Disparate Data Sources
 
-![](/images/blog/os2-correlation/correlation_dark.jpg#dark-mode-only)
-![](/images/blog/os2-correlation/correlation_white.jpg#light-mode-only)
+Satellite detections and AIS broadcasts occur at different times and locations. Consider a practical example: a satellite detects a vessel at 14:02:15 UTC at coordinates $(\phi , \lambda)$. The same vessel's AIS transponder last broadcast its position at 14:00:30 UTC.
 
-## The Problem of Disparate Realities
+This creates several problems:
 
-Consider the operational reality. A Sentinel-1 satellite passes over the Strait of Malacca at `14:02:15 UTC`. It detects a vessel at coordinates $(\phi_{det}, \lambda_{det})$.
+1. **Spatial Disconnect:** The vessel has moved in the 105 seconds between measurements.
+2. **Temporal Disconnect:** The datasets are on different timelines.
+3. **Data Quality:** Satellite detection is based on physical observation, while AIS is based on self-reported data that may contain errors or be deliberately falsified.
 
-Meanwhile, the vessel's AIS transponder, subject to transmission slots, signal collisions, or deliberate "dark" intervals, might have last broadcast its position at `14:00:30 UTC`.
+A simple approach of matching each detection to the nearest AIS point would fail in busy shipping lanes. A nearby fishing vessel might be closer geographically than a cargo ship, but the cargo ship moving at 20 knots in that direction would be the correct match based on physics.
 
-We are presented with a fundamental disconnect:
+OS² solves this as an optimization problem called **weighted bipartite matching**.
 
-1.  **Spatial Disconnect:** The vessel has moved in the intervening 1 minute and 45 seconds.
-2.  **Temporal Disconnect:** The datasets exist on different timelines.
-3.  **Epistemic Disconnect:** The satellite detection is a "visual" truth (it is definitely there), while the AIS data is a "declared" truth (it claims to be there, but GPS can drift or be spoofed).
+## The Cost Function
 
-A naive approach would perform a "Nearest Neighbor" search, snapping the detection to the geographically closest AIS point. In the crowded shipping lanes of the world, this is catastrophic. A fishing trawler 500 meters away might be closer than the cargo ship 800 meters away, but if the cargo ship is moving at 20 knots and the trawler is stationary, the physics dictate that the cargo ship is the correct match.
-
-To solve this, we formalize the problem as a **Weighted Bipartite Matching** challenge.
-
-## The Mathematical Cost Function
-
-We define two sets of nodes: $D$ (Detections) and $A$ (AIS Candidates). Our goal is to create a set of edges connecting $D$ to $A$ such that the total "Cost" of the system is minimized.
-
-The "Cost" ($C_{ij}$) of associating Detection $i$ with AIS Candidate $j$ is a weighted sum of four physical and temporal discrepancies. The lower the cost, the higher the probability that they are the same vessel.
-
-The governing equation for our cost matrix is:
+OS² defines two sets of candidates: detections ($D$) and AIS positions ($A$). The goal is to match them to minimize total cost. The cost of matching detection $i$ with AIS candidate $j$ is calculated as:
 
 $$
-C_{ij} =
-w_s \cdot d_{ij}
+C_{ij} = w_s \cdot d_{ij}
 + w_t \cdot f_j(\Delta t)
 + w_l \cdot \Delta L_{ij}
 + w_v \cdot \Delta \beta_{ij}
 + w_h \cdot \Delta h_{ij}
 $$
 
-Let us deconstruct the physics behind each term.
+Each component of this equation represents a different physical or temporal factor.
 
 ### Spatial Proximity
 
-This is the foundational evidence. We calculate the **Haversine Distance** ($d_{ij}$) between the detection's coordinates and the AIS candidate's _estimated_ position at the time of image acquisition.
+The Haversine distance is calculated between the detection coordinates and the AIS position at the time of image acquisition. This accounts for Earth's spherical shape and ensures accuracy at different latitudes.
 
-We eschew Euclidean geometry because the Earth is an oblate spheroid. At high latitudes, the distance represented by a degree of longitude shrinks. The Haversine formula ensures numerical stability and geodesic accuracy:
+The Haversine formula is:
 
-$$
-d = 2R \cdot \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \phi}{2}\right) + \cos \phi_1 \cos \phi_2 \sin^2\left(\frac{\Delta \lambda}{2}\right)}\right)
-$$
+$$ d = 2R \cdot \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \phi}{2}\right) + \cos \phi_1 \cos \phi_2 \sin^2\left(\frac{\Delta \lambda}{2}\right)}\right) $$
 
-We assign a baseline weight $w_s = 1.0$ treating spatial separation as a linear penalty.
+Where $R$ is Earth's radius, $\phi$ represents latitude, and $\lambda$ represents longitude.
+
+The weight $w_s = 1.0$ treats spatial separation as a linear penalty.
 
 ### Temporal Displacement
 
-This term penalizes the uncertainty introduced by time. The older the AIS data, the less reliable the position estimate.
+This term penalizes uncertainty from time gaps. Older AIS data is less reliable because the vessel's actual position may have changed significantly.
 
-We employ two methods to estimate the vessel's position at the image time ($t_{img}$):
+OS² uses two methods to estimate where a vessel was at image time:
 
-- **Interpolation:** If we have AIS points _before_ and _after_ $t_{img}$, we interpolate linearly. This is highly accurate.
-- Projection (Dead Reckoning):\*\* If we only have past data, we project the position forward using the vessel's Speed Over Ground (SOG) and Course Over Ground (COG).
+1. **Interpolation:** When AIS points exist before and after image time, the position is interpolated linearly. This is highly accurate.
+2. **Projection:** When only past AIS data exists, the position is projected forward using the vessel's Speed Over Ground (SOG) and Course Over Ground (COG).
 
-Projection is inherently risky. A vessel can turn. Thus, we apply a quadratic penalty to the time gap $\Delta t$, and we double the penalty multiplier ($f_j$) if we are forced to use Projection instead of Interpolation.
+Projection is less reliable because vessels can change course. The temporal cost applies a quadratic penalty:
 
 $$
-\text{Cost}_{temporal} = w_t \cdot \left(\frac{\Delta t}{60}\right)^2 \cdot \begin{cases} 1.0 & \text{if Interpolation} \\ 2.0 & \text{if Projection} \end{cases}
+\mathrm{Cost}_{\textit{temporal}}
+=
+w_t \cdot \left(\frac{\Delta t}{60}\right)^2 \cdot
+\begin{cases}
+1.0 & \text{if Interpolation} \\
+2.0 & \text{if Projection}
+\end{cases}
 $$
 
-With $w_t = 10.0$, this ensures that a fresh AIS ping is valued significantly higher than a stale one, exponentially so as time passes.
+With $w_t = 10.0$, recent AIS pings receive significantly lower costs than older data.
 
-#### Morphological Consistency (Length)
+### Morphological Consistency
 
-Vessel length provides a weak but valuable morphological constraint. Rather than enforcing a hard equality, which would be brittle given sensor noise and partial occlusion, we apply a **ratio-based penalty**.
-
-Let $L_{det}$ be the SAR-derived vessel length and $L_{ais}$ the AIS-reported length. We penalize increasing divergence between the two, while tolerating small discrepancies:
-
-- Near-equal lengths incur zero cost
-- Moderate divergence incurs a linear penalty
-- Extreme divergence incurs a sharply increasing cost
-
-This term improves discrimination in dense traffic environments without excluding valid matches due to estimation uncertainty.
+Vessel length provides additional matching information. Rather than requiring exact length matches, OS² applies a ratio-based penalty that tolerates small differences but penalizes large divergences. This allows for sensor measurement uncertainty while still using length as a discriminator in crowded traffic.
 
 ### Kinematic Coherence
 
-Here, physics takes the helm. A vessel has a velocity vector. If an AIS candidate reports it is moving North ($0^\circ$), but the detection lies directly East ($90^\circ$) of the AIS position, the match becomes physically implausible without a significant maneuver.
+A vessel moves in a direction. If AIS reports the vessel moving North ($0 \degree$) but the satellite detection is directly East ($90 \degree$) of the AIS position, the match violates physics.
 
-We calculate the **Required Bearing**: the angle from the AIS point to the Detection point. We then compare this to the vessel's reported COG. The difference, $\Delta \beta$, represents the **Kinematic Violation**.
+OS² calculates the required bearing from the AIS position to the detection point and compares it to the vessel's reported Course Over Ground (COG):
 
 $$
-\Delta \beta = \text{min\_angular\_diff}(\text{Bearing}_{AIS \to Det}, \text{COG}_{AIS})
+\Delta \beta = \mathrm{min\_angular\_diff}\left(\mathrm{Bearing}_{AIS\to Det},\, \mathrm{COG}_{AIS}\right)
 $$
 
-We assign a heavy weight $w_v = 20.0$. This high penalty reflects a hard physical constraint: kinematic inconsistency is a stronger indicator of a false match than a minor spatial error.
+The weight $w_v = 20.0$ is high because kinematic violations are strong indicators of false matches.
 
 ### Directional Consistency
 
-Finally, if the AIS data includes **True Heading** (the direction the bow is pointing, which can differ from COG due to drift), we compare it against the vessel's reported Course Over Ground to detect directional inconsistency.
+When AIS includes True Heading (the direction the vessel's bow points), OS² compares it against COG:
 
-$$
-\Delta h = \text{min\_angular\_diff}(\text{Heading}_{AIS}, \text{COG}_{AIS})
-$$
+$$\Delta h = \mathrm{min\_angular\_diff}\left(\mathrm{Heading}_{AIS},\, \mathrm{COG}_{AIS}\right)$$
 
-We use a weight $w_h = 15.0$. Crucially, if heading data is missing (which is common), this term contributes **zero cost**. We design the system to degrade gracefully, rather than punishing vessels for incomplete data.
+The weight $w_h = 15.0$ reflects the importance of this constraint. Critically, if heading data is missing, this term contributes zero cost rather than penalizing incomplete data.
 
-## The Optimization Engine: The Hungarian Algorithm
+## The Hungarian Algorithm
 
-Once we have calculated the cost for every possible pair of detection and AIS candidate, we generate a **Cost Matrix**. Our goal is to find the assignment that minimizes the _global_ cost of the system.
+After calculating costs for all possible detection-to-AIS pairs, a cost matrix is created. The goal is to find the assignment that minimizes total system cost.
 
-A greedy algorithm (simply picking the lowest numbers first) fails here. It might pick a "pretty good" match for Vessel A that "steals" the _only_ possible match for Vessel B, leaving Vessel B unmatched.
+A greedy approach fails because selecting the lowest-cost match first can prevent other vessels from matching. The Hungarian Algorithm (Kuhn-Munkres algorithm) solves the assignment problem in polynomial time, $\mathcal{O}(n^3)$, by finding optimal independent matches.
 
-We utilize the **Hungarian Algorithm** (Kuhn-Munkres algorithm), which solves the assignment problem in polynomial time ($O(n^3)$). It iteratively adjusts the matrix to find a set of independent zeros that represent the optimal pairing .
+### Handling Non-Square Matrices
 
-## The Problem of Asymmetry
+Real-world data rarely produces square matrices. There might be 50 detections and 200 AIS candidates, or vice versa. The Hungarian Algorithm requires square matrices, so OS² solves this through dummy nodes:
 
-In the real world, the matrices are rarely square. We might have 50 detections and 200 AIS candidates (high clutter). Or 50 detections and only 10 AIS candidates (dark ships).
+- **Dummy rows** represent unidentified objects or false alarms.
+- **Dummy columns** represent missed detections.
 
-The Hungarian algorithm requires a square matrix. We solve this by padding the matrix with **Dummy Nodes**
-
-- **Dummy Rows:** Represent "False Alarms" or unidentifiable objects.
-- **Dummy Columns:** Represent "Missed Detections" (vessels with AIS that the satellite didn't see).
-
-We assign these dummy connections a very high cost threshold (e.g., $10^8$). This ensures that the algorithm only assigns a detection to a "Dummy" (i.e., leaves it unmatched) if _no_ real AIS candidate offers a plausible match below that cost threshold.
+Dummy connections are assigned a high cost threshold ($10^8$). This ensures detections only match to dummy nodes if no real AIS candidate provides a cost below the threshold.
 
 ```mermaid
 graph TD
@@ -176,35 +158,31 @@ graph TD
     end
 ```
 
-## The Cascaded Matching Strategy
+## Cascaded Matching Strategy
 
-Attempting to match every vessel in a single pass is risky. The noise from uncertain, low-quality matches can interfere with the obvious, high-quality ones.
+Matching all detections simultaneously is risky because uncertain matches can interfere with obvious ones. OS² uses a multi-stage cascaded approach that processes matches in order of confidence.
 
-To mimic human analytical reasoning, OS² employs a **Multi-Stage Cascaded Matching** strategy. We peel the onion in layers.
+### Stage One: High Confidence
 
-**Stage 1: High Confidence (The "Slam Dunks")**
+**Constraints:** Spatial radius less than 2 kilometers, time gap less than 10 minutes.
 
-- **Constraints:** Tight spatial radius (< 2 km), short time gap (< 10 mins).
-- **Action:** We run the Hungarian algorithm on this subset. Matches found here are locked in as "High Confidence" .
-- **Result:** The matched detections and AIS candidates are removed from the pool.
+**Process:** The Hungarian Algorithm runs on this restricted subset. Successful matches are locked as "High Confidence."
 
-**Stage 2: Medium Confidence (The "Probables")**
+**Result:** Matched detections and AIS candidates are removed from the pool.
 
-- **Constraints:** Relaxed radius (< 5 km), longer time gap (< 1 hour).
-- **Action:** We match the _residuals_ (the leftovers) from Stage 1.
-- **Context:** This captures vessels where the AIS latency is higher, or where small position errors have crept in .
+### Stage Two: Medium Confidence
 
-**Stage 3: Low Confidence (The "Possibles")**
+**Constraints:** Spatial radius less than 5 kilometers, time gap less than 1 hour.
 
-- **Constraints:** Maximum radius (< 10 km), maximum time gap (< 2 hours).
-- **Action:** A final sweep for difficult cases.
-- **Context:** These matches are flagged for human analyst review. They represent high uncertainty but prevent us from discarding potential correlations completely .
+**Process:** The remaining unmatched detections and AIS candidates are matched. This captures vessels with higher AIS latency or small position errors.
 
-This cascaded approach ensures that clear evidence is prioritized, while ambiguous cases are handled with appropriate caution.
+### Stage Three: Low Confidence
 
-It is important to note that the confidence scores assigned to matches are **stage-derived heuristics**, not probabilistic estimates. A "High Confidence" match reflects strong spatiotemporal and kinematic consistency under strict constraints, not a statistical posterior probability.
+**Constraints:** Spatial radius less than 10 kilometers, time gap less than 2 hours.
 
-This distinction preserves interpretability for analysts and avoids overstating mathematical certainty in an inherently uncertain sensing environment.
+**Process:** A final matching sweep for difficult cases. Matches are flagged for analyst review.
+
+This cascaded approach prioritizes clear evidence while handling ambiguous cases with appropriate caution.
 
 ```mermaid
 graph TD
@@ -230,12 +208,14 @@ graph TD
     end
 ```
 
-## Conclusion: The Unified Picture
+## Confidence Scoring
 
-By the time the Correlation Engine completes its cycle, a process taking mere seconds even for dense scenes, the chaotic scatter of satellite detections has been organized into a structured intelligence picture.
+The confidence scores assigned to matches are heuristic-based, derived from which matching stage they came from. They do not represent statistical probabilities. A "High Confidence" match reflects strong spatiotemporal and kinematic consistency under strict constraints. This approach preserves clarity for analysts and avoids overstating mathematical certainty in inherently uncertain sensor data.
 
-We know which detections correspond to the _MV Ever Given_ and which correspond to anonymous fishing vessels. Crucially, the **unmatched detections**, those that survived all three stages of the cascade without finding a partner, are illuminated. These are the **Dark Vessels**. These are the targets that require immediate operational attention.
+## Conclusion
 
-The Correlation Engine does not just connect data; it isolates anomalies by explaining away the known traffic.
+The Correlation Engine transforms scattered satellite detections into organized intelligence. After processing completes, each detection is either matched to a known vessel or identified as a "dark vessel"—an unmatched target requiring operational attention.
 
-However, there remains one final challenge. The AIS data we rely on is often fractured, full of gaps and silence. To make our correlation robust, we cannot simply accept these gaps. We must fill them. In the final volume of this series, we will explore **The Predictive Compass**: the physics-based interpolation engine that reconstructs the past and predicts the future of maritime movement.
+By matching detections with AIS data, OS² distinguishes between known traffic and unknown targets. The unmatched detections represent anomalies and potential security concerns.
+
+However, AIS data contains gaps and periods of silence. To make correlation robust across these gaps, the system must reconstruct vessel positions during periods without broadcasts. The next stage handles this through physics-based trajectory reconstruction.

@@ -80,15 +80,15 @@ export const siteConfig = {
         backers: [
           {
             name: "C-DOT",
-            logo: "/images/cdot.png",
+            logo: "/images/backed-by/cdot.png",
           },
           {
             name: "STPI",
-            logo: "/images/stpi.png",
+            logo: "/images/backed-by/stpi.png",
           },
           {
             name: "Startup India",
-            logo: "/images/startup-india.png",
+            logo: "/images/backed-by/startup-india.png",
           },
         ],
       },
