@@ -3,15 +3,25 @@
 import { Maximize2, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import mermaid, { type MermaidConfig } from "mermaid";
 import { useEffect, useId, useRef, useState } from "react";
-import svgPanZoom from "svg-pan-zoom";
 import { Button } from "@/components/ui/button";
 import { useDarkMode } from "@/hooks/use-dark-mode";
+
+type SvgPanZoomInstance = {
+  destroy: () => void;
+  getZoom: () => number;
+  zoomAtPoint: (zoom: number, point: { x: number; y: number }) => void;
+  resize: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  resetZoom: () => void;
+  fit: () => void;
+};
 
 export function Mermaid({ chart }: { chart: string }) {
   const id = useId();
   const [svgString, setSvgString] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
-  const panzoomRef = useRef<ReturnType<typeof svgPanZoom> | null>(null);
+  const panzoomRef = useRef<SvgPanZoomInstance | null>(null);
   const isDarkMode = useDarkMode();
 
   useEffect(() => {
@@ -91,6 +101,8 @@ export function Mermaid({ chart }: { chart: string }) {
     const svg = container.querySelector("svg");
     if (!svg) return;
 
+    if (typeof window === "undefined") return;
+
     svg.style.maxWidth = "none";
     svg.style.width = "100%";
 
@@ -99,57 +111,66 @@ export function Mermaid({ chart }: { chart: string }) {
       panzoomRef.current = null;
     }
 
-    const instance = svgPanZoom(svg, {
-      zoomEnabled: true,
-      panEnabled: true,
-      controlIconsEnabled: false,
-      mouseWheelZoomEnabled: false,
-      minZoom: 0.5,
-      maxZoom: 10,
-      fit: true,
-      contain: true,
-      center: true,
-    });
+    let cleanup: (() => void) | null = null;
 
-    panzoomRef.current = instance;
+    void (async () => {
+      const svgPanZoom = (await import("svg-pan-zoom")).default;
+      const instance = svgPanZoom(svg, {
+        zoomEnabled: true,
+        panEnabled: true,
+        controlIconsEnabled: false,
+        mouseWheelZoomEnabled: false,
+        minZoom: 0.5,
+        maxZoom: 10,
+        fit: true,
+        contain: true,
+        center: true,
+      });
 
-    const handleWheel = (event: WheelEvent) => {
-      if (!panzoomRef.current) return;
-      if (!(event.ctrlKey || event.metaKey)) return;
+      panzoomRef.current = instance;
 
-      event.preventDefault();
-      const direction = event.deltaY < 0 ? 1 : -1;
-      const currentZoom = panzoomRef.current.getZoom();
-      const zoomFactor = direction > 0 ? 1.2 : 0.8;
-      const newZoom = currentZoom * zoomFactor;
+      const handleWheel = (event: WheelEvent) => {
+        if (!panzoomRef.current) return;
+        if (!(event.ctrlKey || event.metaKey)) return;
 
-      const rect = svg.getBoundingClientRect();
-      const point = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
+        event.preventDefault();
+        const direction = event.deltaY < 0 ? 1 : -1;
+        const currentZoom = panzoomRef.current.getZoom();
+        const zoomFactor = direction > 0 ? 1.2 : 0.8;
+        const newZoom = currentZoom * zoomFactor;
+
+        const rect = svg.getBoundingClientRect();
+        const point = {
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top,
+        };
+
+        panzoomRef.current.zoomAtPoint(newZoom, point);
       };
 
-      panzoomRef.current.zoomAtPoint(newZoom, point);
-    };
+      const handlePointerDown = () => {
+        container.classList.remove("cursor-grab");
+        container.classList.add("cursor-grabbing");
+      };
 
-    const handlePointerDown = () => {
-      container.classList.remove("cursor-grab");
-      container.classList.add("cursor-grabbing");
-    };
+      const handlePointerUp = () => {
+        container.classList.remove("cursor-grabbing");
+        container.classList.add("cursor-grab");
+      };
 
-    const handlePointerUp = () => {
-      container.classList.remove("cursor-grabbing");
-      container.classList.add("cursor-grab");
-    };
+      container.addEventListener("wheel", handleWheel, { passive: false });
+      svg.addEventListener("pointerdown", handlePointerDown);
+      window.addEventListener("pointerup", handlePointerUp);
 
-    container.addEventListener("wheel", handleWheel, { passive: false });
-    svg.addEventListener("pointerdown", handlePointerDown);
-    window.addEventListener("pointerup", handlePointerUp);
+      cleanup = () => {
+        container.removeEventListener("wheel", handleWheel);
+        svg.removeEventListener("pointerdown", handlePointerDown);
+        window.removeEventListener("pointerup", handlePointerUp);
+      };
+    })();
 
     return () => {
-      container.removeEventListener("wheel", handleWheel);
-      svg.removeEventListener("pointerdown", handlePointerDown);
-      window.removeEventListener("pointerup", handlePointerUp);
+      cleanup?.();
       if (panzoomRef.current) {
         panzoomRef.current.destroy();
         panzoomRef.current = null;
