@@ -26,7 +26,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { allBlogsByDate } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +33,6 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [filterOpen, setFilterOpen] = useState(false);
-  const { ref, isVisible } = useIntersectionObserver();
 
   const { categories, categoryCounts } = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -246,23 +244,15 @@ export default function BlogPage() {
         </section>
       )}
 
-      <section ref={ref} className="py-12 px-4 sm:px-6 lg:px-8">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {otherPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {otherPosts.map((post, index) => (
+              {otherPosts.map((post) => (
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className={cn(
-                    "group block p-6 bg-card border border-border rounded-lg hover:shadow-lg hover:border-accent hover:-translate-y-2",
-                    isVisible
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-10",
-                  )}
-                  style={{
-                    transition: `opacity 700ms ${index * 100}ms, transform 700ms ${index * 100}ms, box-shadow 300ms, border-color 300ms`,
-                  }}
+                  className="group block p-6 bg-card border border-border rounded-lg hover:shadow-lg hover:border-accent hover:-translate-y-2 transition-all duration-300"
                 >
                   <div className="relative w-full bg-linear-to-br from-accent/10 to-accent/5 rounded-lg mb-4 overflow-hidden aspect-3/2">
                     <BlogBannerImage

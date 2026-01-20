@@ -96,9 +96,7 @@ export function NavBar() {
                       }
                     >
                       <PopoverTrigger asChild>
-                        <p
-                  className="text-foreground hover:text-accent-foreground transition-colors text-sm font-medium gap-1 flex items-center cursor-pointer"
-                        >
+                        <p className="text-foreground hover:text-accent-foreground transition-colors text-sm font-medium gap-1 flex items-center cursor-pointer">
                           {item.label}
                           <ChevronDownIcon size={16} />
                         </p>

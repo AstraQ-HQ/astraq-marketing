@@ -2,7 +2,9 @@ export default function PrivacyPage() {
   return (
     <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className="font-mono text-5xl text-foreground mb-2">Privacy Policy</h1>
+        <h1 className="font-mono text-5xl text-foreground mb-2">
+          Privacy Policy
+        </h1>
         <p className="text-muted-foreground mb-8">
           Last updated: January 1, 2025
         </p>
