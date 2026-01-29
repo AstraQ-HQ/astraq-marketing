@@ -249,15 +249,15 @@ const blogs = defineCollection({
         part: document.series.part,
         previous: previousDoc
           ? {
-            slug: prevSlug,
-            title: prevTitle,
-          }
+              slug: prevSlug,
+              title: prevTitle,
+            }
           : null,
         next: nextDoc
           ? {
-            slug: nextSlug,
-            title: nextTitle,
-          }
+              slug: nextSlug,
+              title: nextTitle,
+            }
           : null,
       };
     }
@@ -462,19 +462,6 @@ const services = defineCollection({
   },
 });
 
-const testimonials = defineCollection({
-  name: "testimonials",
-  directory: "content/testimonials",
-  include: "**/*.yml",
-  parser: "yaml",
-  schema: z.object({
-    quote: z.string(),
-    author: z.string(),
-    company: z.string(),
-    initials: z.string(),
-  }),
-});
-
 const achievements = defineCollection({
   name: "achievements",
   directory: "content/achievements",
@@ -521,7 +508,6 @@ export default defineConfig({
     caseStudies,
     products,
     services,
-    testimonials,
     achievements,
     openSource,
   ],

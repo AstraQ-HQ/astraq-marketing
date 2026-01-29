@@ -1,19 +1,17 @@
 import { compareDesc } from "date-fns";
 import {
+  type Achievement,
+  allAchievements,
   allBlogs,
   allCaseStudies,
   allOpenSources,
   allProducts,
   allServices,
-  allTestimonials,
-  allAchievements,
   type Blog,
   type CaseStudy,
   type OpenSource,
   type Product,
   type Service,
-  type Testimonial,
-  type Achievement,
 } from "../../.content-collections/generated";
 
 function sortBlogsByDateAndPart(a: Blog, b: Blog): number {
@@ -53,20 +51,6 @@ export function getSeriesParts(blog: Blog) {
 export const allFeaturedProducts = allProducts.filter((p) => p.featured);
 export const allFeaturedServices = allServices.filter((s) => s.featured);
 
-export {
-  allProducts,
-  allServices,
-  allTestimonials,
-  allOpenSources,
-  allAchievements,
-};
+export { allProducts, allServices, allOpenSources, allAchievements };
 
-export type {
-  Blog,
-  CaseStudy,
-  OpenSource,
-  Product,
-  Service,
-  Testimonial,
-  Achievement,
-};
+export type { Blog, CaseStudy, OpenSource, Product, Service, Achievement };
