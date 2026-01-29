@@ -462,16 +462,17 @@ const services = defineCollection({
   },
 });
 
-const testimonials = defineCollection({
-  name: "testimonials",
-  directory: "content/testimonials",
+const achievements = defineCollection({
+  name: "achievements",
+  directory: "content/achievements",
   include: "**/*.yml",
   parser: "yaml",
   schema: z.object({
-    quote: z.string(),
-    author: z.string(),
-    company: z.string(),
-    initials: z.string(),
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    blogSlug: z.string().optional(),
+    icon: z.string().optional(),
   }),
 });
 
@@ -507,7 +508,7 @@ export default defineConfig({
     caseStudies,
     products,
     services,
-    testimonials,
+    achievements,
     openSource,
   ],
 });
