@@ -66,7 +66,7 @@ export function NavBar() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled ? "bg-secondary shadow-sm" : "bg-transparent",
+        isScrolled ? "bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm" : "bg-white/80 backdrop-blur-sm",
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -96,7 +96,7 @@ export function NavBar() {
                       }
                     >
                       <PopoverTrigger asChild>
-                        <p className="text-foreground hover:text-accent-foreground transition-colors text-sm font-medium gap-1 flex items-center cursor-pointer">
+                        <p className="text-slate-700 hover:text-slate-900 transition-colors text-sm font-bold gap-2 flex items-center cursor-pointer px-4 py-1.5 rounded-xl border border-slate-200 hover:border-slate-300 bg-white/50 hover:bg-white">
                           {item.label}
                           <ChevronDownIcon size={16} />
                         </p>
@@ -106,8 +106,8 @@ export function NavBar() {
                           {item.items.map((subItem) => (
                             <Link
                               key={subItem.label}
-                              href={subItem.href as Route}
-                              className="px-3 py-2 rounded-sm text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                              href={subItem.href as any}
+                              className="flex items-center gap-2 px-6 py-2 rounded-xl bg-white text-black hover:bg-white/90 font-bold transition-all border border-white/40"
                               onClick={() => setOpenDropdown(null)}
                             >
                               {subItem.label}
@@ -123,7 +123,7 @@ export function NavBar() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="text-foreground hover:text-accent-foreground transition-colors text-sm font-medium"
+                  className="text-slate-700 hover:text-slate-900 transition-colors text-sm font-bold px-4 py-1.5 rounded-xl border border-slate-200 hover:border-slate-300 bg-white/50 hover:bg-white whitespace-nowrap"
                 >
                   {item.label}
                 </Link>
@@ -131,8 +131,8 @@ export function NavBar() {
             })}
           </div>
 
-          <Button className="hidden md:block" asChild>
-            <Link href={siteConfig.header.cta.href}>
+          <Button className="hidden md:block border border-slate-200" variant="outline" asChild>
+            <Link href={siteConfig.header.cta.href as any}>
               {siteConfig.header.cta.text}
             </Link>
           </Button>
@@ -140,7 +140,7 @@ export function NavBar() {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" className="border border-slate-200">
                   <MenuIcon size={24} strokeWidth={1} />
                 </Button>
               </SheetTrigger>
@@ -204,8 +204,8 @@ export function NavBar() {
                   })}
                 </div>
                 <SheetFooter className="p-0 mt-4">
-                  <Button className="w-full" asChild>
-                    <Link href={siteConfig.header.cta.href}>
+                  <Button className="w-full border border-white/40" asChild>
+                    <Link href={siteConfig.header.cta.href as any}>
                       {siteConfig.header.cta.text}
                     </Link>
                   </Button>

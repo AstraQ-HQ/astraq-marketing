@@ -451,7 +451,7 @@ export default function CaseStudiesPage() {
                     />
                   </div>
                   <div className="flex flex-wrap items-center gap-2 mb-3">
-                    <span className="text-xs font-semibold text-accent-foreground bg-accent/10 px-3 py-1 rounded-sm">
+                    <span className="text-xs font-semibold text-[--accent-strong] bg-accent/20 border border-accent/30 px-3 py-1 rounded-sm">
                       {caseStudy.category}
                     </span>
                     {caseStudy.severity && (

@@ -20,25 +20,25 @@ export default function ProductsPage() {
 
   return (
     <>
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-secondary via-background to-background">
+      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="font-mono text-5xl sm:text-6xl text-foreground mb-4">
+          <h1 className="font-mono text-5xl sm:text-6xl text-white mb-6">
             Our Products
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-white/50 max-w-2xl mx-auto">
             Comprehensive cybersecurity solutions for enterprise protection
           </p>
         </div>
       </section>
 
-      <section className="sticky top-16 backdrop-blur border-b border-border py-4 px-4 sm:px-6 lg:px-8 z-40">
-        <div className="max-w-7xl mx-auto flex gap-2 overflow-x-auto">
+      <section className="sticky top-16 bg-black/80 backdrop-blur-md border-b border-white/20 py-4 px-4 sm:px-6 lg:px-8 z-40">
+        <div className="max-w-7xl mx-auto flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((category) => (
             <Button
               key={category}
               onClick={() => setActiveCategory(category)}
               variant={activeCategory === category ? "default" : "outline"}
-              className="rounded-sm whitespace-nowrap"
+              className="rounded-xl whitespace-nowrap px-6 border border-white/40"
             >
               {category}
             </Button>

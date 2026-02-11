@@ -45,14 +45,14 @@ export function Testimonials() {
         <div className="relative bg-background rounded-sm p-8 md:p-12 border border-border">
           <div className="min-h-48 flex flex-col justify-center">
             <QuoteIcon
-              className="w-8 h-8 text-accent-foreground mb-4 opacity-50"
-              strokeWidth={1}
+              className="w-8 h-8 text-[--accent-strong] mb-4 opacity-70"
+              strokeWidth={1.5}
             />
             <blockquote className="text-xl md:text-2xl font-mono mb-6 text-foreground leading-relaxed">
               "{allTestimonials[current].quote}"
             </blockquote>
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-accent/10 rounded-sm flex items-center justify-center font-semibold text-accent-foreground">
+              <div className="w-12 h-12 bg-accent/20 border border-accent/30 rounded-sm flex items-center justify-center font-semibold text-[--accent-strong]">
                 {allTestimonials[current].initials}
               </div>
               <div>

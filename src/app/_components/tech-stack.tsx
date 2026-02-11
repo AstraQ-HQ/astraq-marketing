@@ -11,12 +11,14 @@ export function TechStack() {
   return (
     <section ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/20">
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="font-mono text-4xl sm:text-5xl text-foreground mb-4">
-          {title}
-        </h2>
-        <p className="text-lg text-muted-foreground mb-16 max-w-2xl mx-auto">
-          {description}
-        </p>
+        <div className={cn("mb-16", isVisible ? "animate-slide-up" : "opacity-0")}>
+          <h2 className="font-mono text-4xl sm:text-5xl text-foreground mb-4">
+            {title}
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            {description}
+          </p>
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {techs.map((tech, index) => {
@@ -31,11 +33,10 @@ export function TechStack() {
                   transition: `opacity 700ms ${index * 100}ms, transform 700ms ${index * 100}ms`,
                 }}
               >
-                <div className="flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 bg-accent/10 rounded-sm flex items-center justify-center">
+                <div className="flex flex-col items-center gap-3 transition-all duration-300 hover:scale-105">
+                  <div className="w-12 h-12 bg-accent/20 border border-accent/30 rounded-sm flex items-center justify-center transition-all duration-300 hover:bg-accent/30 hover:border-accent/50 hover:scale-110 hover:rotate-3">
                     <Icon
-                      className="w-6 h-6 text-accent-foreground"
-                      strokeWidth={1}
+                      className="w-6 h-6 text-[--accent-strong] transition-transform duration-300"
                     />
                   </div>
                   <p className="font-semibold text-primary">{tech.name}</p>

@@ -42,7 +42,7 @@ export function FeaturedServices() {
   return (
     <section ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12">
+        <div className={cn("mb-12", isVisible ? "animate-slide-up" : "opacity-0")}>
           <h2 className="font-mono text-4xl sm:text-5xl text-foreground mb-4">
             {siteConfig.pages.home.featuredServices.title}
           </h2>
@@ -62,8 +62,10 @@ export function FeaturedServices() {
                   onClick={() => handleServiceClick(index)}
                   className={cn(
                     "flex items-start gap-4 p-4 cursor-pointer text-left transition-all duration-300 relative",
-                    isActive ? "bg-accent" : "hover:bg-muted/20",
+                    isActive ? "bg-accent" : "hover:bg-muted/20 hover:scale-[1.02]",
+                    isVisible ? "animate-slide-in-right" : "opacity-0",
                   )}
+                  style={{ animationDelay: `${index * 0.1}s`, animationFillMode: "both" }}
                 >
                   {isActive && (
                     <div
@@ -76,16 +78,16 @@ export function FeaturedServices() {
                   )}
                   <div
                     className={cn(
-                      "w-10 h-10 rounded-sm flex items-center justify-center flex-shrink-0 transition-colors",
+                      "w-10 h-10 rounded-sm flex items-center justify-center flex-shrink-0 transition-colors border",
                       isActive
-                        ? "bg-accent/20 text-accent-foreground"
-                        : "bg-border text-muted-foreground",
+                        ? "bg-accent/25 border-accent/40 text-[--accent-strong]"
+                        : "bg-border border-border text-muted-foreground",
                     )}
                   >
                     <Icon
                       name={service.icon}
                       className="w-5 h-5"
-                      strokeWidth={1}
+                      strokeWidth={1.5}
                     />
                   </div>
                   <div className="flex-1">
@@ -105,11 +107,11 @@ export function FeaturedServices() {
 
           <div className="flex-1 flex flex-col gap-6">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-sm bg-accent/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-sm bg-accent/20 border border-accent/30 flex items-center justify-center flex-shrink-0">
                 <Icon
                   name={activeServiceData.icon}
-                  className="w-6 h-6 text-accent-foreground"
-                  strokeWidth={1}
+                  className="w-6 h-6 text-[--accent-strong]"
+                  strokeWidth={1.5}
                 />
               </div>
               <div className="flex-1">

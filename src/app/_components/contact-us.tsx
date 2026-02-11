@@ -68,7 +68,7 @@ export function ContactUsSection() {
       />
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row w-full items-center justify-center gap-6 md:gap-12">
-          <div className="flex flex-col items-start justify-start gap-3 self-stretch">
+          <div className="flex flex-col items-start justify-start gap-3 self-stretch animate-slide-in-left">
             <div className="flex flex-col justify-center self-stretch font-mono text-3xl text-secondary-foreground leading-tight tracking-tight md:text-5xl md:leading-[56px]">
               {title}
             </div>

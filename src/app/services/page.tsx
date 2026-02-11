@@ -13,12 +13,12 @@ export default function ServicesPage() {
 
   return (
     <>
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-secondary via-background to-background">
+      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="font-mono text-5xl sm:text-6xl text-foreground mb-4">
+          <h1 className="font-mono text-5xl sm:text-6xl text-white mb-6">
             Our Services
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-white/50 max-w-2xl mx-auto">
             Expert services complementing your security infrastructure
           </p>
         </div>
@@ -44,16 +44,16 @@ export default function ServicesPage() {
             ))}
           </div>
 
-          <div className="mt-16 text-center p-12 bg-secondary rounded-lg border border-border">
-            <h2 className="font-mono text-3xl text-foreground mb-4">
+          <div className="mt-24 text-center p-16 bg-black rounded-2xl border border-white/40">
+            <h2 className="font-mono text-4xl text-white mb-6">
               Get Expert Support
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-white/60 mb-8 max-w-2xl mx-auto text-lg">
               Contact our team to discuss which services are right for your
               organization
             </p>
             <Button
-              className="text-primary-foreground rounded-sm font-semibold hover:shadow-lg"
+              className="rounded-xl font-bold px-8 h-12 border border-white/40"
               asChild
             >
               <Link href={siteConfig.pages.services.cta.href}>

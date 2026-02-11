@@ -46,15 +46,15 @@ export function Achievements() {
     return (
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
             <div className="max-w-6xl mx-auto">
-                <h2 className="font-mono text-4xl sm:text-5xl text-foreground mb-16 text-center">
+                <h2 className="font-mono text-4xl sm:text-5xl text-foreground mb-16 text-center animate-slide-up">
                     Our Achievements
                 </h2>
 
-                <div className="relative bg-background rounded-sm p-8 md:p-12 border border-border">
-                    <div className="min-h-48 flex flex-col justify-center">
+                <div className="relative bg-background rounded-sm p-8 md:p-12 border border-border transition-all duration-300 hover:shadow-lg hover:scale-[1.01]">
+                    <div className="min-h-48 flex flex-col justify-center animate-fade-in">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="p-3 bg-accent/10 rounded-sm text-accent-foreground">
-                                <Icon size={24} />
+                            <div className="p-3 bg-accent/20 border border-accent/30 rounded-sm text-[--accent-strong]">
+                                <Icon size={24} strokeWidth={1.5} />
                             </div>
                             <span className="font-mono text-sm uppercase tracking-wider text-muted-foreground">
                                 {new Date(achievement.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}

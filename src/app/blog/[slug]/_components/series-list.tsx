@@ -29,11 +29,11 @@ export function SeriesList({
           return (
             <li key={part.slug}>
               {isCurrent ? (
-                <div className="flex items-start gap-2 p-2 rounded-md bg-accent/10 border-l-2 border-accent">
+                <div className="flex items-start gap-2 p-2 rounded-md bg-accent/20 border-l-2 border-[--accent-strong]">
                   <Badge variant="default" className="mt-0.5 shrink-0 text-xs">
                     Part {part.part}
                   </Badge>
-                  <span className="font-medium text-accent-foreground text-sm">
+                  <span className="font-medium text-[--accent-strong] text-sm">
                     {part.title}
                   </span>
                 </div>
