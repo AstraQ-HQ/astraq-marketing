@@ -1,0 +1,367 @@
+ASTRAQ CYBER DEFENCE PVT. LTD.
+COMMERCIAL CLOSED-SOURCE SOFTWARE LICENSE AGREEMENT
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Effective Date  : [INSERT EFFECTIVE DATE]
+  Licensor        : AstraQ Cyber Defence Pvt. Ltd., India
+  Product Name    : [INSERT PRODUCT NAME]
+  License Version : 1.0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IMPORTANT — READ CAREFULLY BEFORE USING THIS SOFTWARE.
+
+By installing, copying, accessing, or otherwise using the Software, the Licensee
+agrees to be bound by the terms of this Agreement. If you do not agree, do not
+install or use the Software.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. DEFINITIONS
+━━━━━━━━━━━━━━
+
+1.1  "Software" means the proprietary product developed by AstraQ Cyber Defence
+     Pvt. Ltd., including but not limited to source code, object code, APIs,
+     SDKs, documentation, AI/ML models, configurations, scripts, and any updates,
+     patches, or upgrades thereto.
+
+1.2  "AI Components" means any trained models, embeddings, inference pipelines,
+     heuristics, detection engines, retrieval-augmented generation (RAG) systems,
+     scoring or ranking logic, neural network weights, or any other machine
+     learning elements included in or associated with the Software.
+
+1.3  "Licensee" means the individual, organisation, or legal entity that has
+     entered into a valid commercial agreement with AstraQ and been granted a
+     license to use the Software under these terms.
+
+1.4  "Confidential Information" includes, without limitation, source code,
+     system architecture, trade secrets, proprietary algorithms, detection and
+     scoring logic, AI model weights, technical documentation, pricing, and any
+     non-public business information disclosed by AstraQ.
+
+1.5  "Derivative Work" means any work that is based upon, incorporates, or is
+     derived from the Software or any part thereof, including modifications,
+     adaptations, translations, or enhancements.
+
+
+2. LICENSE GRANT
+━━━━━━━━━━━━━━━━
+
+Subject to full payment of applicable fees and compliance with this Agreement,
+AstraQ Cyber Defence Pvt. Ltd. grants the Licensee a:
+
+  - Non-exclusive
+  - Non-transferable
+  - Non-sublicensable
+  - Revocable
+
+license to use the Software solely for the Licensee's internal business purposes,
+strictly within the scope of the purchased plan (as defined in the signed
+commercial order form).
+
+This license does NOT transfer any ownership, title, or intellectual property
+rights in or to the Software to the Licensee.
+
+
+3. LICENSE RESTRICTIONS
+━━━━━━━━━━━━━━━━━━━━━━━
+
+The Licensee shall NOT, directly or indirectly:
+
+  (a) Access, copy, reproduce, or attempt to obtain the source code of the
+      Software by any means;
+
+  (b) Reverse engineer, decompile, disassemble, or otherwise attempt to derive
+      the source code, underlying algorithms, or structure of the Software;
+
+  (c) Create, develop, or distribute any Derivative Work based on or inspired
+      by the Software;
+
+  (d) Resell, rent, lease, lend, sublicense, or otherwise transfer the Software
+      or any rights therein to any third party;
+
+  (e) Use the Software, or any knowledge gained from its use, to design, develop,
+      or support a product or service that competes with the Software or with
+      AstraQ's business;
+
+  (f) Publish, disclose, or distribute any benchmark, performance comparison, or
+      evaluation results related to the Software without prior written consent
+      from AstraQ;
+
+  (g) Circumvent, disable, or tamper with any security, licensing, access control,
+      or copy-protection mechanism built into or associated with the Software;
+
+  (h) Extract, reconstruct, replicate, or approximate any AI Component, including
+      model weights, embeddings, detection rules, heuristics, or training data.
+
+
+4. INTELLECTUAL PROPERTY
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+4.1  All rights, title, and interest in and to the Software — including all AI
+     Components, detection logic, RAG architecture, compliance frameworks,
+     algorithms, and documentation — remain exclusively with AstraQ Cyber Defence
+     Pvt. Ltd. No ownership rights are transferred to the Licensee under this
+     Agreement.
+
+4.2  All AI models, detection logic, RAG architecture, scoring engines, and
+     compliance frameworks embedded in or associated with the Software are
+     protected as trade secrets and proprietary intellectual property of AstraQ.
+
+4.3  AstraQ retains all rights to patents, copyrights, trademarks, and trade
+     secrets in the Software, whether existing now or arising in the future.
+
+
+5. SOURCE CODE PROTECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5.1  The Software is provided to the Licensee in object or compiled form only.
+     Source code is strictly proprietary and confidential.
+
+5.2  Any unauthorised attempt to access, extract, or reproduce the source code
+     constitutes:
+
+       - A material breach of this Agreement;
+       - Copyright infringement under applicable law; and
+       - Misappropriation of trade secrets.
+
+5.3  AstraQ reserves all legal remedies available in the event of such
+     unauthorised access, including but not limited to injunctive relief and
+     damages.
+
+
+6. AI COMPONENTS & DATA PROTECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6.1  The Licensee shall not:
+
+       (a) Extract, scrape, or replicate any embeddings, model outputs, internal
+           detection rules, or scoring systems from the Software;
+
+       (b) Probe, query, or interact with the Software in a systematic manner
+           designed to reconstruct any AI model, pipeline, or logic;
+
+       (c) Use outputs of the Software's AI Components to train, fine-tune, or
+           improve any competing machine learning model.
+
+6.2  Any attempt to replicate, approximate, or reverse-engineer the AI
+     Components for competitive, commercial, or research purposes is strictly
+     prohibited and constitutes a material breach of this Agreement.
+
+
+7. DEPLOYMENT TERMS
+━━━━━━━━━━━━━━━━━━━
+
+7.1  Depending on the Licensee's purchased plan, access to the Software may be
+     provided via:
+
+       - Software-as-a-Service (SaaS) access
+       - On-premises deployment
+       - Private cloud deployment
+
+7.2  The license scope is strictly limited to:
+
+       - The deployment environment specified in the commercial order form;
+       - The number of authorised users or seats purchased; and
+       - The usage tier and feature set defined in the applicable plan.
+
+7.3  Any use beyond the licensed scope without prior written approval from
+     AstraQ is a breach of this Agreement.
+
+
+8. ANTI-CLONE & COMPETITIVE USE RESTRICTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The Licensee may not use the Software, or any knowledge, output, architecture,
+or workflow derived from using the Software, to develop, design, or launch any
+product, platform, or service that competes with AstraQ's offerings, including
+but not limited to:
+
+  - Cloud security or threat detection platforms
+  - Phishing detection or email security tools
+  - AI-based RAG or compliance automation systems
+  - Malware sandboxing or behavioural analysis platforms
+
+
+9. SECURITY RESEARCH RESTRICTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+No security testing, penetration testing, vulnerability research, or fuzzing
+of the Software or its infrastructure is permitted without express prior written
+authorisation from AstraQ Cyber Defence Pvt. Ltd. Unauthorised testing may
+constitute a criminal offence under applicable law.
+
+
+10. API USAGE RESTRICTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The Licensee shall not:
+
+  - Automate API calls in a manner designed to scrape, extract, or harvest
+    Software outputs beyond normal product use;
+
+  - Use automated tools, bots, or scripts to systematically query the Software's
+    APIs for the purpose of reconstructing any AI model, rule, or logic; or
+
+  - Resell or expose Software API access to any third party.
+
+
+11. FEES & PAYMENT
+━━━━━━━━━━━━━━━━━━
+
+11.1 The Licensee agrees to pay all fees as specified in the signed commercial
+     order form or applicable invoice.
+
+11.2 Failure to make payment by the due date may result in:
+
+       - Immediate suspension of Software access; and/or
+       - Termination of this license.
+
+11.3 All fees are non-refundable unless expressly stated otherwise in the
+     commercial agreement.
+
+
+12. CONFIDENTIALITY
+━━━━━━━━━━━━━━━━━━━
+
+12.1 The Licensee agrees to maintain strict confidentiality of all Confidential
+     Information, including Software internals, security architecture, AI
+     detection logic, and compliance engines.
+
+12.2 The Licensee shall not disclose Confidential Information to any third party
+     without prior written consent from AstraQ.
+
+12.3 This confidentiality obligation survives the termination or expiry of this
+     Agreement for a period of five (5) years.
+
+
+13. DATA PRIVACY
+━━━━━━━━━━━━━━━━
+
+13.1 AstraQ processes personal data in accordance with:
+
+       - The Digital Personal Data Protection (DPDP) Act, 2023 (India); and
+       - Any other applicable international data protection laws.
+
+13.2 The Licensee retains ownership of and responsibility for its own customer
+     data processed through the Software.
+
+13.3 AstraQ's data processing practices are further detailed in its Privacy
+     Policy, available at [INSERT PRIVACY POLICY URL].
+
+
+14. WARRANTY DISCLAIMER
+━━━━━━━━━━━━━━━━━━━━━━━
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. TO THE MAXIMUM
+EXTENT PERMITTED BY APPLICABLE LAW, ASTRAQ EXPRESSLY DISCLAIMS ALL WARRANTIES,
+WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING BUT NOT LIMITED TO:
+
+  - IMPLIED WARRANTIES OF MERCHANTABILITY;
+  - FITNESS FOR A PARTICULAR PURPOSE; AND
+  - NON-INFRINGEMENT OF THIRD-PARTY RIGHTS.
+
+ASTRAQ DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE, UNINTERRUPTED,
+OR FREE FROM SECURITY VULNERABILITIES.
+
+
+15. LIMITATION OF LIABILITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+15.1 IN NO EVENT SHALL ASTRAQ'S TOTAL CUMULATIVE LIABILITY UNDER THIS AGREEMENT
+     EXCEED THE FEES PAID BY THE LICENSEE IN THE TWELVE (12) MONTHS PRECEDING
+     THE EVENT GIVING RISE TO THE CLAIM.
+
+15.2 ASTRAQ SHALL NOT BE LIABLE FOR ANY:
+
+       - Indirect, incidental, or consequential damages;
+       - Loss of revenue, profits, or business opportunity;
+       - Loss, corruption, or unauthorised access to data; or
+       - Business interruption or system downtime.
+
+15.3 THE ABOVE LIMITATIONS APPLY REGARDLESS OF THE FORM OF ACTION, WHETHER IN
+     CONTRACT, TORT, NEGLIGENCE, OR OTHERWISE, EVEN IF ASTRAQ HAS BEEN ADVISED
+     OF THE POSSIBILITY OF SUCH DAMAGES.
+
+
+16. TERMINATION
+━━━━━━━━━━━━━━━
+
+16.1 AstraQ may terminate this license immediately upon written notice if the
+     Licensee:
+
+       (a) Breaches any material term of this Agreement and fails to cure such
+           breach within fifteen (15) days of written notice;
+
+       (b) Attempts to reverse engineer, decompile, or extract the Software's
+           source code or AI Components; or
+
+       (c) Fails to make payment when due.
+
+16.2 Upon termination:
+
+       - The Licensee must immediately cease all use of the Software;
+       - Destroy or return all copies, installations, and deployments; and
+       - Certify in writing to AstraQ that the above obligations have been met.
+
+16.3 Sections 4, 5, 6, 12, 14, 15, and 18 shall survive termination.
+
+
+17. AUDIT RIGHTS
+━━━━━━━━━━━━━━━━
+
+17.1 AstraQ reserves the right to audit the Licensee's use of the Software, upon
+     reasonable advance notice, to verify compliance with this Agreement.
+
+17.2 If an audit reveals unauthorised or excess usage, the Licensee shall be
+     liable for:
+
+       - Fees applicable to the excess usage; and
+       - Reasonable costs of the audit, if excess usage exceeds 10%.
+
+
+18. GOVERNING LAW & DISPUTE RESOLUTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+18.1 This Agreement shall be governed by and construed in accordance with the
+     laws of India, without regard to conflict of law principles.
+
+18.2 Any dispute arising under or in connection with this Agreement shall be
+     subject to the exclusive jurisdiction of the courts located in
+     [INSERT CITY — e.g., Ahmedabad / New Delhi].
+
+18.3 Prior to initiating legal proceedings, the parties agree to attempt good-
+     faith resolution through written notice and thirty (30) days of negotiation.
+
+
+19. EXPORT CONTROL
+━━━━━━━━━━━━━━━━━━
+
+The Licensee agrees to comply with all applicable export control laws and
+regulations in connection with the use and distribution of the Software,
+including those of India and any other applicable jurisdiction.
+
+
+20. ENTIRE AGREEMENT & AMENDMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+20.1 This Agreement, together with the signed commercial order form, constitutes
+     the entire agreement between the parties with respect to the Software and
+     supersedes all prior agreements, representations, and understandings.
+
+20.2 No amendment to this Agreement shall be binding unless made in writing and
+     signed by authorised representatives of both parties.
+
+20.3 If any provision of this Agreement is found to be invalid or unenforceable,
+     the remaining provisions shall continue in full force and effect.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Copyright (c) [INSERT YEAR] AstraQ Cyber Defence Pvt. Ltd. All Rights Reserved.
+
+  For licensing enquiries:  legal@astraq.in  (update as appropriate)
+  For support:              support@astraq.in (update as appropriate)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
